@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>925474118601-5j79bbldt0j5tqiiknt7vq1ocil2gee0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.925474118601-5j79bbldt0j5tqiiknt7vq1ocil2gee0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD7hIg6eke9JpnvKOC2T06aZ3SEh9OXRRY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>925474118601</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.fluttervn.travelspots</string>
+	<key>PROJECT_ID</key>
+	<string>travel-spots-3f577</string>
+	<key>STORAGE_BUCKET</key>
+	<string>travel-spots-3f577.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:925474118601:ios:57fbedb6c66e4231432618</string>
+	<key>DATABASE_URL</key>
+	<string>https://travel-spots-3f577.firebaseio.com</string>
+</dict>
+</plist>
