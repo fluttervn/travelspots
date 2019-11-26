@@ -79,7 +79,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
             onPressed: _createRelic,
           ),
           IconButton(
-            icon: Icon(Icons.file_download),
+            icon: Icon(Icons.import_export),
             onPressed: _loadCSV,
           )
         ],
