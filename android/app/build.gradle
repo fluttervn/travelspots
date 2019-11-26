@@ -52,12 +52,7 @@ android {
             storeFile file('keystore/debug.keystore')
 
         }
-        release {
-            storeFile file('/travelspots/android/app/keystore/release.keystore')
-            storePassword "android"
-            keyAlias "androidreleasekey"
-            keyPassword "android"
-        }
+
     }
     buildTypes {
         debug {
