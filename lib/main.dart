@@ -1,6 +1,8 @@
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:travelspots/screens/launcher/map_page.dart';
+import 'package:travelspots/utils/navigation.dart';
 
 import 'common/base_bloc.dart';
 import 'common/base_state.dart';
@@ -148,6 +150,8 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                       heroTag: 'tag3',
                       onPressed: () {
                         // Open MapView page
+                        Navigation.openScreen(
+                            context: context, page: MapPage());
                       },
                       child: Icon(Icons.map),
                     ),
