@@ -48,7 +48,7 @@ class CSVUtils {
 
     //Delete all data before importing
     var batch = Firestore.instance.batch();
-    var snapshot = await Firestore.instance.collection('relics').getDocuments();
+    var snapshot = await Firestore.instance.collection('spots').getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       batch.delete(document.reference);
     }
@@ -59,8 +59,8 @@ class CSVUtils {
     for (var itemJson in listData) {
       var item = RelicDataModel.fromGoogleJson(itemJson);
 
-      batch.setData(Firestore.instance.collection('relics').document(),
-          item.toJsonData());
+      batch.setData(
+          Firestore.instance.collection('spots').document(), item.toJsonData());
     }
 
     batch.commit();
