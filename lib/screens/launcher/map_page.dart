@@ -15,9 +15,11 @@ class MapPage extends StatefulWidget {
 
 /// A class displays map state
 class MapPageState extends State<MapPage> {
+//  LocationData _startLocation;
   Location _locationService = new Location();
   bool _permission = false;
   String error;
+  bool _isMoveToCurrentGps = false;
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _initialCamera = CameraPosition(
@@ -53,12 +55,20 @@ class MapPageState extends State<MapPage> {
           _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
-            _currentCameraPosition = CameraPosition(
-                target: LatLng(result.latitude, result.longitude), zoom: 16);
+            if (!_isMoveToCurrentGps) {
+              _currentCameraPosition = CameraPosition(
+                  target: LatLng(result.latitude, result.longitude), zoom: 16);
 
-            final GoogleMapController controller = await _controller.future;
-            controller.animateCamera(
-                CameraUpdate.newCameraPosition(_currentCameraPosition));
+              final GoogleMapController controller = await _controller.future;
+              controller.animateCamera(
+                  CameraUpdate.newCameraPosition(_currentCameraPosition));
+              /*if(mounted){
+              setState(() {
+                _currentLocation = result;
+              });
+            }*/
+              _isMoveToCurrentGps = true;
+            }
           });
         }
       } else {
@@ -77,6 +87,10 @@ class MapPageState extends State<MapPage> {
       }
       location = null;
     }
+/*
+    setState(() {
+      _startLocation = location;
+    });*/
   }
 
   @override
