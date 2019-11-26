@@ -24,12 +24,12 @@ class _DemoSearchPageState extends State<DemoSearchPage> {
           onTap: () {
             Fimber.d('tap on search content -> open SearchInput page');
           },
-          child: TextField(
-            enabled: false,
-            decoration: InputDecoration(
-              hintText: "Search for travel spots",
-              border: InputBorder.none,
-              hintStyle: TextStyle(color: Colors.grey),
+          child: Text(
+            'Search for travel spots...',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
