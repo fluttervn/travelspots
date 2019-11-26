@@ -2,6 +2,8 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:travelspots/utils/navigation.dart';
 
+import 'demo_search_input_page.dart';
+
 class DemoSearchPage extends StatefulWidget {
   @override
   _DemoSearchPageState createState() => _DemoSearchPageState();
@@ -13,7 +15,7 @@ class _DemoSearchPageState extends State<DemoSearchPage> {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text('Content'),
+          child: Text('Let touch on SearchBar in the AppBar'),
         ),
       ),
       appBar: AppBar(
@@ -23,6 +25,10 @@ class _DemoSearchPageState extends State<DemoSearchPage> {
         title: GestureDetector(
           onTap: () {
             Fimber.d('tap on search content -> open SearchInput page');
+            Navigation.openScreen(
+              context: context,
+              page: DemoSearchInputPage(),
+            );
           },
           child: Text(
             'Search for travel spots...',
