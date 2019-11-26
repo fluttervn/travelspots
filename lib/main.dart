@@ -1,12 +1,24 @@
+import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+
+import 'common/base_bloc.dart';
+import 'common/base_state.dart';
+import 'main_bloc.dart';
+import 'repos/models/ui_models/relic_ui_model.dart';
+import 'singleton/config.dart';
+import 'utils/csv_utils.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final MainBloc _mainBloc = MainBloc(appRepo: Config.shared.getAppRepo());
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    Fimber.d('build one time');
+
+    Widget tree = MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -22,6 +34,9 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
+
+    tree = PropertyChangeProvider(value: _mainBloc, child: tree);
+    return tree;
   }
 }
 
@@ -43,33 +58,50 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends BaseState<MyHomePage> {
+  MainBloc _mainBloc;
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _mainBloc = providerOfBloc();
+  }
+
+  void _getRelics() {
+    _mainBloc.getRelicList();
+  }
+
+  void _createRelic() async {
+    _counter++;
+    await _mainBloc.createRelic(
+      RelicUIModel(
+          name: 'Địa đạo Củ Chi $_counter',
+          address:
+              'Xã Phú Mỹ Hưng, xã Phạm Văn Cội, xã Nhuận Đức, huyện Củ Chi',
+          description: 'Di tích lịch sử Địa đạo Củ Chi '),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+  Widget buildChild(BuildContext context) {
+    // TODO: implement buildChild
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _createRelic,
+          ),
+          IconButton(
+            icon: Icon(Icons.file_download),
+            onPressed: _loadCSV,
+          )
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -92,20 +124,55 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'Relics:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+            PropertyChangeConsumer<MainBloc>(
+              properties: [
+                BaseBlocProperties.loading,
+                BaseBlocProperties.serverError,
+                BaseBlocProperties.serverSuccess,
+              ],
+              builder: (context, bloc, property) {
+                Fimber.d('pros: $property, bloc: $bloc');
+                if (property == null) {
+                  return Center(
+                    child: Text('Press button to get data'),
+                  );
+                } else if (property == BaseBlocProperties.loading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (property == BaseBlocProperties.serverError) {
+                  return Center(
+                    child: Text('error'),
+                  );
+                } else {
+                  Fimber.d('pros: ${bloc.relics}');
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: bloc.relics.length,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        bloc.relics[index].name,
+                        style: TextStyle(color: Colors.blue),
+                      );
+                    },
+                  );
+                }
+              },
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _getRelics,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void _loadCSV() async {
+    CSVUtils.importJsonDataToFirestore();
   }
 }
