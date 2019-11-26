@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "925474118601",
+    "firebase_url": "https://travel-spots-3f577.firebaseio.com",
+    "project_id": "travel-spots-3f577",
+    "storage_bucket": "travel-spots-3f577.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925474118601:android:1e3bcb1abf744b69432618",
+        "android_client_info": {
+          "package_name": "com.fluttervn.travelspots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925474118601-oa5mckg64htosoekdotr6788l5botf5h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fluttervn.travelspots",
+            "certificate_hash": "73f5ff1911e0b533023a336726a259d914f2b998"
+          }
+        },
+        {
+          "client_id": "925474118601-156flvq280d37bir3p73oqplc6tc28gb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAum_2DibT64L6Hjy3ALl7-R8V2UPcevaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "925474118601-156flvq280d37bir3p73oqplc6tc28gb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "925474118601-5j79bbldt0j5tqiiknt7vq1ocil2gee0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fluttervn.travelspots"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
