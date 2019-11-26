@@ -1,6 +1,8 @@
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:travelspots/common/demo_search_page.dart';
+import 'package:travelspots/utils/navigation.dart';
 
 import 'common/base_bloc.dart';
 import 'common/base_state.dart';
@@ -137,7 +139,10 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                     child: FloatingActionButton(
                       heroTag: 'tag2',
                       onPressed: () {
-                        // Open Search page
+                        Navigation.openScreen(
+                          context: context,
+                          page: DemoSearchPage(),
+                        );
                       },
                       child: Icon(Icons.search),
                     ),
