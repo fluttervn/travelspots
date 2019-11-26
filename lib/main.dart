@@ -1,5 +1,6 @@
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/demo_search_page.dart';
 import 'package:travelspots/utils/navigation.dart';
@@ -11,7 +12,10 @@ import 'repos/models/ui_models/relic_ui_model.dart';
 import 'singleton/config.dart';
 import 'utils/csv_utils.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  Fimber.plantTree(FimberTree());
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   final MainBloc _mainBloc = MainBloc(appRepo: Config.shared.getAppRepo());
