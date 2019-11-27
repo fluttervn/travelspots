@@ -23,7 +23,8 @@ class MapPageState extends State<MapPage> {
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _initialCamera = CameraPosition(
-    target: LatLng(0, 0),
+    target:
+        LatLng(10.762622, 106.660172), // Ho Chi Minh City(10.762622,106.660172)
     zoom: 4,
   );
 
