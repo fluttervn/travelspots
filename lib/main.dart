@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/demo_search_page.dart';
+import 'package:travelspots/screens/launcher/map_bloc.dart';
 import 'package:travelspots/screens/launcher/map_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
@@ -20,6 +21,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final MainBloc _mainBloc = MainBloc(appRepo: Config.shared.getAppRepo());
+  final MapBloc _mapBloc = MapBloc();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
     );
 
     tree = PropertyChangeProvider(value: _mainBloc, child: tree);
+    tree = PropertyChangeProvider(value: _mapBloc, child: tree);
     return tree;
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/main_bloc.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
@@ -28,7 +29,7 @@ class MapPageState extends BaseState<MapPage> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MapBloc _mapBloc;
   MainBloc _mainBloc;
-  MarkerId selectedMarker;
+  SpotUIModel selectedSpot;
   StreamSubscription<LocationData> _locationSubscription;
   Location _locationService = new Location();
   bool _permission = false;
@@ -54,8 +55,7 @@ class MapPageState extends BaseState<MapPage> {
     if (widget.spots != null && widget.spots.length > 0) {
       for (var i = 0; i < widget.spots.length; i++) {
         SpotUIModel spotUIModel = widget.spots[i];
-        _addMarker(i + 1, spotUIModel.lat, spotUIModel.long, spotUIModel.name,
-            spotUIModel.description);
+        _addMarker(i + 1, spotUIModel);
       }
     }
   }
@@ -82,24 +82,9 @@ class MapPageState extends BaseState<MapPage> {
 //    future.then((void value) => _closeModal(value));
   }
 
-  void _onMarkerTapped(MarkerId markerId) {
-    final Marker tappedMarker = markers[markerId];
-    /*if (tappedMarker != null) {
-      setState(() {
-        if (markers.containsKey(selectedMarker)) {
-          final Marker resetOld = markers[selectedMarker]
-              .copyWith(iconParam: BitmapDescriptor.defaultMarker);
-          markers[selectedMarker] = resetOld;
-        }
-        selectedMarker = markerId;
-        final Marker newMarker = tappedMarker.copyWith(
-          iconParam: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen,
-          ),
-        );
-        markers[markerId] = newMarker;
-      });
-    }*/
+  void _onMarkerTapped(SpotUIModel spotUIModel) {
+    selectedSpot = spotUIModel;
+    _mapBloc.notifyMarkerTapped();
   }
 
   void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
@@ -128,18 +113,18 @@ class MapPageState extends BaseState<MapPage> {
     }
   }
 
-  void _addMarker(int index, double latitude, double longtitude, String title,
-      String description) {
-    Fimber.d('MapPage _addMarker @title=$title, @description=$description');
+  void _addMarker(int index, SpotUIModel spotUIModel) {
+    Fimber.d(
+        'MapPage _addMarker @title=${spotUIModel.name}, @description=${spotUIModel.description}');
     final String markerIdVal = 'marker_id_$index';
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
       markerId: markerId,
-      position: LatLng(latitude, longtitude),
+      position: LatLng(spotUIModel.lat, spotUIModel.long),
 //      infoWindow: InfoWindow(title: title, snippet: description),
       onTap: () {
-//        _mapBloc.notifyMarkerTapped();
+        _onMarkerTapped(spotUIModel);
       },
 //      onDragEnd: (LatLng position) {
 //        _onMarkerDragEnd(markerId, position);
@@ -254,14 +239,14 @@ class MapPageState extends BaseState<MapPage> {
             },
             markers: Set<Marker>.of(markers.values),
           ),
-          /*PropertyChangeConsumer<MapBloc>(
+          PropertyChangeConsumer<MapBloc>(
             properties: [MapProperties.makerTapped],
             builder: (context, bloc, property) {
               return Container(
-                child: Text('fadsfds'),
+                child: Text(selectedSpot.name),
               );
             },
-          )*/
+          )
         ],
       ),
     );
