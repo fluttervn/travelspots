@@ -55,7 +55,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
   }
 
   void _getTravelSpots() async {
-    spots=await _mainBloc.getTravelSpots();
+    spots = await _mainBloc.getTravelSpots();
   }
 
   void _createTravelSpot() async {
@@ -160,7 +160,10 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                       onPressed: () {
                         // Open MapView page
                         Navigation.openScreen(
-                            context: context, page: MapPage(spots: this.spots,));
+                            context: context,
+                            page: MapPage(
+                              spots: this.spots,
+                            ));
                       },
                       child: Icon(Icons.map),
                     ),
