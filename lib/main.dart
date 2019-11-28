@@ -53,14 +53,14 @@ class _MyHomePageState extends BaseState<MyHomePage> {
     _mainBloc = providerOfBloc();
   }
 
-  void _getRelics() {
-    _mainBloc.getRelicList();
+  void _getTravelSpots() {
+    _mainBloc.getTravelSpots();
   }
 
-  void _createRelic() async {
+  void _createTravelSpot() async {
     _counter++;
-    await _mainBloc.createRelic(
-      RelicUIModel(
+    await _mainBloc.createTravelSpot(
+      SpotUIModel(
           name: 'Địa đạo Củ Chi $_counter',
           address:
               'Xã Phú Mỹ Hưng, xã Phạm Văn Cội, xã Nhuận Đức, huyện Củ Chi',
@@ -76,7 +76,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _createRelic,
+            onPressed: _createTravelSpot,
           ),
           IconButton(
             icon: Icon(Icons.import_export),
@@ -112,13 +112,13 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                     child: Text('error'),
                   );
                 } else {
-                  Fimber.d('pros: ${bloc.relics}');
+                  Fimber.d('pros: ${bloc.spots}');
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: bloc.relics.length,
+                    itemCount: bloc.spots.length,
                     itemBuilder: (context, index) {
                       return Text(
-                        bloc.relics[index].name,
+                        bloc.spots[index].name,
                         style: TextStyle(color: Colors.blue),
                       );
                     },
@@ -172,7 +172,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               heroTag: 'tag1',
-              onPressed: _getRelics,
+              onPressed: _getTravelSpots,
               tooltip: 'Increment',
               child: Icon(Icons.add),
             ),

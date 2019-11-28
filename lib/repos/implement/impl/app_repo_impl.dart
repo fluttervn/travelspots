@@ -11,19 +11,22 @@ class AppRepoImpl extends AppRepo {
   AppRepoImpl();
 
   @override
-  Future<List<RelicDataModel>> getRelicList() async {
-    final QuerySnapshot result =
-        await Firestore.instance.collection('relics').getDocuments();
+  Future<List<SpotDataModel>> getTravelSpotList() async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('provinces')
+        .document('ho_chi_minh')
+        .collection('quan_1')
+        .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     Fimber.d('document: $documents');
 
     return documents
-        .map((document) => RelicDataModel.fromDocument(document))
+        .map((document) => SpotDataModel.fromDocument(document))
         .toList();
   }
 
   @override
-  Future<bool> createRelic({RelicDataModel data}) async {
+  Future<bool> createTravelSpot({SpotDataModel data}) async {
     try {
       await Firestore.instance
           .collection('relics')

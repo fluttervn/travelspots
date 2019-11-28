@@ -4,6 +4,6 @@ import 'models/data_models/relic_data_model.dart';
 /// This is only abstract class, you must implement method inside this class.
 abstract class AppRepo {
   /// Method to call getting Relics
-  Future<List<RelicDataModel>> getRelicList();
-  Future<bool> createRelic({RelicDataModel data});
+  Future<List<SpotDataModel>> getTravelSpotList();
+  Future<bool> createTravelSpot({SpotDataModel data});
 }

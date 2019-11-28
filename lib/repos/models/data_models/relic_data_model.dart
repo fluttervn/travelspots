@@ -3,27 +3,24 @@ import 'package:fimber/fimber.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
 
 /// RelicData Model
-class RelicDataModel {
+class SpotDataModel {
   /// id
   String id;
 
-  /// Tên
-  String ten;
+  /// Name
+  String name;
 
-  /// Cấp di tích
-  int capDiTich;
+  /// Popularity
+  int popularity;
 
-  /// Loại di tích
-  int loaiDiTich;
+  /// Address
+  String address;
 
-  /// Địa chỉ
-  String diaChi;
+  /// District
+  String district;
 
-  /// Quận
-  String quan;
-
-  /// Tỉnh thành
-  String tinhThanh;
+  /// District key
+  String districtKey;
 
   /// Lat
   double lat;
@@ -31,106 +28,108 @@ class RelicDataModel {
   /// Long
   double long;
 
-  /// Quyết định xếp hạng
-  String quyetDinhXepHang;
+  /// Description
+  String description;
 
-  /// Mô tả
-  String moTa;
+  /// Website
+  String website;
 
-  /// Ảnh
-  String anh;
+  /// Image link
+  String imageLink;
 
-  RelicDataModel(
+  SpotDataModel(
       {this.id,
-      this.ten,
-      this.capDiTich,
-      this.loaiDiTich,
-      this.diaChi,
-      this.quan,
-      this.tinhThanh,
+      this.name,
+      this.popularity,
+      this.address,
+      this.district,
+      this.districtKey,
       this.lat,
       this.long,
-      this.quyetDinhXepHang,
-      this.moTa,
-      this.anh});
+      this.description,
+      this.website,
+      this.imageLink});
 
   /// Constructor RelicData Model
 
-  factory RelicDataModel.fromDocument(DocumentSnapshot document) {
+  factory SpotDataModel.fromDocument(DocumentSnapshot document) {
     Fimber.d('document data: ${document.data}');
-    return RelicDataModel(
+    return SpotDataModel(
       id: document.documentID,
-      ten: document['ten'],
-      moTa: document['moTa'],
-      diaChi: document['diaChi'],
+      name: document['name'],
+      popularity: document['popularity'],
+      address: document['address'],
+      district: document['district'],
+      districtKey: document['district_key'],
+      lat: document['lat'],
+      long: document['long'],
+      description: document['description'],
+      website: document['website'],
+      imageLink: document['image_link'],
     );
   }
 
   Map<String, dynamic> toJsonData() {
     return {
-      'ten': ten,
-      'capDiTich': capDiTich,
-      'loaiDiTich': loaiDiTich,
-      'diaChi': diaChi,
-      'quan': quan,
-      'tinhThanh': tinhThanh,
+      'name': name,
+      'popularity': popularity,
+      'address': address,
+      'district': district,
+      'districtkey': districtKey,
       'lat': lat,
       'long': long,
-      'quyetDinhXepHang': quyetDinhXepHang,
-      'moTa': moTa,
-      'anh': anh,
+      'description': description,
+      'website': website,
+      'image_link': imageLink,
     };
   }
 
-  factory RelicDataModel.fromUI(RelicUIModel model) {
-    return RelicDataModel(
+  factory SpotDataModel.fromUI(SpotUIModel model) {
+    return SpotDataModel(
       id: model.id,
-      ten: model.name,
-      moTa: model.description,
-      diaChi: model.address,
+      name: model.name,
+      address: model.address,
+      description: model.description,
     );
   }
 
   // for importing data
-  factory RelicDataModel.fromGoogleJson(Map<String, dynamic> itemJson) {
+  factory SpotDataModel.fromGoogleJson(Map<String, dynamic> itemJson) {
     var id = itemJson['gsx\u0024id']['\u0024t'];
-    var ten = itemJson['gsx\u0024ten']['\u0024t'];
-    var capDiTich = itemJson['gsx\u0024capditich']['\u0024t'];
-    var loaiDiTich = itemJson['gsx\u0024loaiditich']['\u0024t'];
-    var diaChi = itemJson['gsx\u0024diachi']['\u0024t'];
-    var quan = itemJson['gsx\u0024quan']['\u0024t'];
-    var tinhThanh = itemJson['gsx\u0024tinhthanh']['\u0024t'];
+    var name = itemJson['gsx\u0024name']['\u0024t'];
+    var popularity = itemJson['gsx\u0024popularity']['\u0024t'];
+    var address = itemJson['gsx\u0024address']['\u0024t'];
+    var district = itemJson['gsx\u0024district']['\u0024t'];
+    var districtKey = itemJson['gsx\u0024districtkey']['\u0024t'];
     var lat = itemJson['gsx\u0024lat']['\u0024t'];
     var long = itemJson['gsx\u0024long']['\u0024t'];
-    var quyetDinhXepHang = itemJson['gsx\u0024quyetdinhxephang']['\u0024t'];
-    var moTa = itemJson['gsx\u0024mota']['\u0024t'];
-    var anh = itemJson['gsx\u0024anh']['\u0024t'];
+    var description = itemJson['gsx\u0024description']['\u0024t'];
+    var website = itemJson['gsx\u0024website']['\u0024t'];
+    var imageLink = itemJson['gsx\u0024imagelink']['\u0024t'];
     print('id is: $id');
-    print('ten is: $ten');
-    print('capDiTich is: $capDiTich');
-    print('loaiDiTich is: $loaiDiTich');
-    print('diaChi is: $diaChi');
-    print('quan is: $quan');
-    print('tinhThanh is: $tinhThanh');
+    print('name is: $name');
+    print('popularity is: $popularity');
+    print('address is: $address');
+    print('district is: $district');
+    print('districtKey is: $districtKey');
     print('lat is: $lat');
     print('long is: $long');
-    print('quyetDinhXepHang is: $quyetDinhXepHang');
-    print('moTa is: $moTa');
-    print('anh is: $anh');
+    print('description is: $description');
+    print('website is: $website');
+    print('imageLink is: $imageLink');
 
-    return RelicDataModel(
+    return SpotDataModel(
       id: id,
-      ten: ten,
-      capDiTich: int.parse(capDiTich),
-      loaiDiTich: int.parse(loaiDiTich),
-      diaChi: diaChi,
-      quan: quan,
-      tinhThanh: tinhThanh,
-      lat: double.parse(lat),
-      long: double.parse(long),
-      quyetDinhXepHang: quyetDinhXepHang,
-      moTa: moTa,
-      anh: anh,
+      name: name,
+      popularity: int.parse(popularity == '' ? '3' : popularity),
+      address: address,
+      district: district,
+      districtKey: districtKey,
+      lat: double.parse(lat == '' ? '10.7771437' : lat),
+      long: double.parse(long == '' ? '106.6954479' : long),
+      description: description,
+      website: website,
+      imageLink: imageLink,
     );
   }
 }

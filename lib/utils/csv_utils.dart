@@ -45,22 +45,31 @@ class CSVUtils {
   static importJsonDataToFirestore() async {
     //Get json from google
     var listData = await _getJsonData();
+    var batch;
 
     //Delete all data before importing
-    var batch = Firestore.instance.batch();
-    var snapshot = await Firestore.instance.collection('spots').getDocuments();
-    for (DocumentSnapshot document in snapshot.documents) {
-      batch.delete(document.reference);
-    }
-    await batch.commit();
+//    var batch = Firestore.instance.batch();
+//    var document = await Firestore.instance
+//        .collection('provinces')
+//        .document('ho_chi_minh').delete()
+////    for (DocumentSnapshot document in snapshot.documents) {
+////      batch.delete(document.reference);
+////    }
+////    batch.delete(document);
+////    await batch.commit();
 
     //Convert json to Firebase json and import to Firestore
     batch = Firestore.instance.batch();
     for (var itemJson in listData) {
-      var item = RelicDataModel.fromGoogleJson(itemJson);
+      var item = SpotDataModel.fromGoogleJson(itemJson);
 
       batch.setData(
-          Firestore.instance.collection('spots').document(), item.toJsonData());
+          Firestore.instance
+              .collection('provinces')
+              .document('ho_chi_minh')
+              .collection(item.districtKey)
+              .document(),
+          item.toJsonData());
     }
 
     batch.commit();

@@ -14,7 +14,7 @@ import 'repos/models/ui_models/relic_ui_model.dart';
 class MainBloc extends BaseBloc<BaseBlocProperties> {
   /// Provide account data from network or local
   final AppRepo appRepo;
-  List<RelicUIModel> relics;
+  List<SpotUIModel> spots;
 
   /// Error message
   String errorMessage = '';
@@ -30,16 +30,16 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   }
 
   /// Method to call getting Relics
-  Future<List<RelicUIModel>> getRelicList() async {
+  Future<List<SpotUIModel>> getTravelSpots() async {
     try {
       notifyListeners(BaseBlocProperties.loading);
-      List<RelicDataModel> relicsData = await appRepo.getRelicList();
-      relics = relicsData.map((item) => RelicUIModel.fromData(item)).toList();
+      List<SpotDataModel> relicsData = await appRepo.getTravelSpotList();
+      spots = relicsData.map((item) => SpotUIModel.fromData(item)).toList();
 
-      Fimber.d('relic data: $relics');
+      Fimber.d('relic data: $spots');
 
       notifyListeners(BaseBlocProperties.serverSuccess);
-      return relics;
+      return spots;
     } on FltException catch (e) {
       errorMessage = e.localizeMessage;
       notifyListeners(BaseBlocProperties.serverError);
@@ -48,11 +48,11 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   }
 
   /// Method to call creating Relic
-  Future<bool> createRelic(RelicUIModel model) async {
+  Future<bool> createTravelSpot(SpotUIModel model) async {
     try {
       notifyListeners(BaseBlocProperties.loading);
       bool result =
-          await appRepo.createRelic(data: RelicDataModel.fromUI(model));
+          await appRepo.createTravelSpot(data: SpotDataModel.fromUI(model));
 
       Fimber.d('result: $result');
 

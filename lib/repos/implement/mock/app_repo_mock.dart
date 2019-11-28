@@ -10,13 +10,13 @@ class AppRepoMock extends AppRepo {
   }
 
   @override
-  Future<List<RelicDataModel>> getRelicList() {
+  Future<List<SpotDataModel>> getTravelSpotList() {
     // TODO: implement getRelicList
     return null;
   }
 
   @override
-  Future<bool> createRelic({RelicDataModel data}) {
+  Future<bool> createTravelSpot({SpotDataModel data}) {
     // TODO: implement createRelic
     return null;
   }
