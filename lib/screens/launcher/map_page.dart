@@ -26,7 +26,7 @@ class MapPageState extends BaseState<MapPage> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MapBloc _mapBloc;
   MarkerId selectedMarker;
-//  LocationData _startLocation;
+  StreamSubscription<LocationData> _locationSubscription;
   Location _locationService = new Location();
   bool _permission = false;
   String error;
@@ -163,7 +163,7 @@ class MapPageState extends BaseState<MapPage> {
         if (_permission) {
           location = await _locationService.getLocation();
 
-          _locationService
+          _locationSubscription = _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
             Fimber.d('MapView:onLocationChanged');
@@ -207,6 +207,12 @@ class MapPageState extends BaseState<MapPage> {
 
   void _onDownloadClicked() {
     Fimber.d('MapView:_onDownloadClicked');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _locationSubscription.cancel();
   }
 
   @override
