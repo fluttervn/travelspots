@@ -242,9 +242,13 @@ class MapPageState extends BaseState<MapPage> {
           PropertyChangeConsumer<MapBloc>(
             properties: [MapProperties.makerTapped],
             builder: (context, bloc, property) {
-              return Container(
-                child: Text(selectedSpot.name),
-              );
+              if (property == MapProperties.makerTapped) {
+                return Container(
+                  child: Text('fasdfdasa'),
+                );
+              } else {
+                return Container();
+              }
             },
           )
         ],
