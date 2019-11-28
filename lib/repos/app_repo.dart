@@ -6,4 +6,6 @@ abstract class AppRepo {
   /// Method to call getting Relics
   Future<List<SpotDataModel>> getTravelSpotList();
   Future<bool> createTravelSpot({SpotDataModel data});
+
+  Future<void> testQueryByGeolocation();
 }

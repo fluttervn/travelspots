@@ -20,4 +20,10 @@ class AppRepoMock extends AppRepo {
     // TODO: implement createRelic
     return null;
   }
+
+  @override
+  Future<void> testQueryByGeolocation() {
+    // TODO: implement testQueryByGeolocation
+    return null;
+  }
 }
