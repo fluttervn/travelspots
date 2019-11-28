@@ -97,6 +97,9 @@ class MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Map'),
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         myLocationEnabled: true,
