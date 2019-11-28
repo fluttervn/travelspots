@@ -66,7 +66,16 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   }
 
   /// Method to test Firestore query
-  Future<void> testQueryByGeolocation() async {
-    await appRepo.testQueryByGeolocation();
+  Future<void> testQueryByGeolocation({
+    @required double latStart,
+    @required double latEnd,
+    @required double longStart,
+    @required double longEnd,
+  }) async {
+    await appRepo.testQueryByGeolocation(
+        latStart: latStart,
+        latEnd: latEnd,
+        longStart: longStart,
+        longEnd: longEnd);
   }
 }

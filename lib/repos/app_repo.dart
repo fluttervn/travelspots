@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'models/data_models/relic_data_model.dart';
 
 /// Interface to call data related to common data of application.
@@ -5,7 +7,13 @@ import 'models/data_models/relic_data_model.dart';
 abstract class AppRepo {
   /// Method to call getting Relics
   Future<List<SpotDataModel>> getTravelSpotList();
+
   Future<bool> createTravelSpot({SpotDataModel data});
 
-  Future<void> testQueryByGeolocation();
+  Future<void> testQueryByGeolocation({
+    @required double latStart,
+    @required double latEnd,
+    @required double longStart,
+    @required double longEnd,
+  });
 }

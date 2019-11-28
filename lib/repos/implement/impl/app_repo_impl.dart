@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fimber/fimber.dart';
+import 'package:flutter/foundation.dart';
 import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import '../../app_repo.dart';
@@ -40,54 +41,28 @@ class AppRepoImpl extends AppRepo {
   }
 
   @override
-  Future<void> testQueryByGeolocation() async {
+  Future<void> testQueryByGeolocation({
+    @required double latStart,
+    @required double latEnd,
+    @required double longStart,
+    @required double longEnd,
+  }) async {
     try {
       Stopwatch stopwatch = Stopwatch()..start();
       // Test: all POIs in `quan_1` with lat & long in range
-      var snapshot;
-      var documents;
+      Query query = Firestore.instance.collection('spots');
+      // TODO(triet) Try to fix query in multiple fields
+      // https://stackoverflow.com/questions/47633483/not-know-exception-with-firebase-filters/47634225
+      /*.where('lat', isGreaterThan: latStart)
+          .where('lat', isLessThan: latEnd);*/
 
-      /*snapshot = await Firestore.instance
-          .collection('provinces')
-          .document('ho_chi_minh')
-          .collection('huyen_binh_chanh')
+      var snapshot = await query
+          .where('long', isGreaterThan: longStart)
+          .where('long', isLessThan: longEnd)
           .getDocuments();
-      documents = snapshot.documents;
+      var documents = snapshot.documents;
 
-      Fimber.d('testQueryByGeolocation: 1. documents = ${documents.length}, '
-          'time= ${stopwatch.elapsed.inMilliseconds}');
-      stopwatch.reset();
-
-      snapshot = await Firestore.instance
-          .collection('provinces')
-          .document('ho_chi_minh')
-          .collection('huyen_binh_chanh')
-          .getDocuments();
-      documents = snapshot.documents;
-      Fimber.d('testQueryByGeolocation: 2. documents = ${documents.length}, '
-          'time= ${stopwatch.elapsed.inMilliseconds}');
-      stopwatch.reset();
-
-      snapshot = await Firestore.instance
-          .collection('provinces')
-          .document('ho_chi_minh')
-          .collection('huyen_binh_chanh')
-          .getDocuments(source: Source.cache);
-      documents = snapshot.documents;
-
-      Fimber.d('testQueryByGeolocation: 3. documents = ${documents.length}, '
-          'time= ${stopwatch.elapsed.inMilliseconds}');
-      stopwatch.reset();*/
-
-      // lat in range [x, y], long in range [a, b]
-      snapshot = await Firestore.instance
-          .collection('spots')
-          .where('long', isGreaterThan: 106.7893492)
-          .where('long', isLessThan: 106.7993492)
-          .getDocuments();
-      documents = snapshot.documents;
-
-      Fimber.d('testQueryByGeolocation: 4. documents = ${documents.length}, '
+      Fimber.d('testQueryByGeolocation: documents = ${documents.length}, '
           'time= ${stopwatch.elapsed.inMilliseconds}');
       stopwatch.reset();
     } catch (e) {

@@ -6,8 +6,10 @@ import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:travelspots/common/base_state.dart';
+import 'package:travelspots/main_bloc.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
 import 'package:travelspots/screens/launcher/map_bloc.dart';
+import 'package:travelspots/utils/app_utils.dart';
 
 /// A class displays map UI
 class MapPage extends StatefulWidget {
@@ -25,6 +27,7 @@ class MapPage extends StatefulWidget {
 class MapPageState extends BaseState<MapPage> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MapBloc _mapBloc;
+  MainBloc _mainBloc;
   MarkerId selectedMarker;
 //  LocationData _startLocation;
   Location _locationService = new Location();
@@ -45,7 +48,8 @@ class MapPageState extends BaseState<MapPage> {
   void initState() {
     super.initState();
 //    _mapBloc = MapBloc();
-//    _mapBloc = providerOfBloc();
+    _mainBloc = providerOfBloc();
+
     initPlatformState();
     if (widget.spots != null && widget.spots.length > 0) {
       for (var i = 0; i < widget.spots.length; i++) {
@@ -166,8 +170,8 @@ class MapPageState extends BaseState<MapPage> {
           _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
-            Fimber.d('MapView:onLocationChanged');
             if (!_isMoveToCurrentGps) {
+              Fimber.d('MapView:onLocationChanged & not Moving to current');
               _currentCameraPosition = CameraPosition(
                   target: LatLng(result.latitude, result.longitude), zoom: 16);
 
@@ -205,8 +209,20 @@ class MapPageState extends BaseState<MapPage> {
     });*/
   }
 
-  void _onDownloadClicked() {
-    Fimber.d('MapView:_onDownloadClicked');
+  void _onGetNearbyPoi() async {
+    Fimber.d('MapView: get nearby POI');
+    final GoogleMapController controller = await _controller.future;
+    LatLngBounds visibleRegion = await controller.getVisibleRegion();
+    Fimber.d('new regionBound=$visibleRegion');
+    List newRegion = AppUtils.calculateMapRegion(visibleRegion);
+    Fimber.d('new extra region =$newRegion');
+
+    _mainBloc.testQueryByGeolocation(
+      latStart: newRegion[0],
+      latEnd: newRegion[1],
+      longStart: newRegion[2],
+      longEnd: newRegion[3],
+    );
   }
 
   @override
@@ -215,17 +231,9 @@ class MapPageState extends BaseState<MapPage> {
       appBar: AppBar(
         title: Text('Map'),
         actions: <Widget>[
-          InkWell(
-            child: Container(
-              child: Text('Download'),
-              height: 60,
-//              width: 40,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(right: 16),
-            ),
-            onTap: () {
-              _onDownloadClicked();
-            },
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _onGetNearbyPoi,
           )
         ],
       ),

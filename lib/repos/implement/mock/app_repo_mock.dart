@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import '../../app_repo.dart';
@@ -22,7 +23,12 @@ class AppRepoMock extends AppRepo {
   }
 
   @override
-  Future<void> testQueryByGeolocation() {
+  Future<void> testQueryByGeolocation({
+    @required double latStart,
+    @required double latEnd,
+    @required double longStart,
+    @required double longEnd,
+  }) async {
     // TODO: implement testQueryByGeolocation
     return null;
   }
