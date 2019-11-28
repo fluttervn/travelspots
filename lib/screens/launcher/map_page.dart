@@ -29,7 +29,7 @@ class MapPageState extends BaseState<MapPage> {
   MapBloc _mapBloc;
   MainBloc _mainBloc;
   MarkerId selectedMarker;
-//  LocationData _startLocation;
+  StreamSubscription<LocationData> _locationSubscription;
   Location _locationService = new Location();
   bool _permission = false;
   String error;
@@ -167,7 +167,7 @@ class MapPageState extends BaseState<MapPage> {
         if (_permission) {
           location = await _locationService.getLocation();
 
-          _locationService
+          _locationSubscription = _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
             if (!_isMoveToCurrentGps) {
@@ -223,6 +223,12 @@ class MapPageState extends BaseState<MapPage> {
       longStart: newRegion[2],
       longEnd: newRegion[3],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _locationSubscription.cancel();
   }
 
   @override

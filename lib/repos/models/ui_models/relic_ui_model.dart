@@ -20,6 +20,9 @@ class SpotUIModel {
   /// Long
   double long;
 
+  /// District
+  String district;
+
   /// Constructor UserRoleDataModel
   SpotUIModel({
     this.id,
@@ -28,6 +31,7 @@ class SpotUIModel {
     this.address,
     this.lat,
     this.long,
+    this.district,
   });
 
   factory SpotUIModel.fromData(SpotDataModel model) {
@@ -38,6 +42,7 @@ class SpotUIModel {
       address: model.address,
       lat: model.lat,
       long: model.long,
+      district: model.district,
     );
   }
 }

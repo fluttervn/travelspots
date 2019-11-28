@@ -7,6 +7,15 @@ import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import 'app_utils.dart';
 
+final String json_HaNoi =
+    'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/oxci3z6/public/values?alt=json';
+final String json_HoChiMinh =
+    'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/o2hjwv2/public/values?alt=json';
+
+final String jsonLink = json_HaNoi;
+
+String provinceKey;
+
 class CSVUtils {
   static readLocalTSV() async {
     var file = await AppUtils.getFileFromAssets('hcm_relics.tsv');
@@ -48,28 +57,23 @@ class CSVUtils {
     var batch;
 
     //Delete all data before importing
-//    var batch = Firestore.instance.batch();
-//    var document = await Firestore.instance
-//        .collection('provinces')
-//        .document('ho_chi_minh').delete()
-////    for (DocumentSnapshot document in snapshot.documents) {
-////      batch.delete(document.reference);
-////    }
-////    batch.delete(document);
-////    await batch.commit();
+    batch = Firestore.instance.batch();
+    var snapshot = await Firestore.instance
+        .collection('spots')
+        .where('province_key', isEqualTo: provinceKey)
+        .getDocuments();
+    for (DocumentSnapshot document in snapshot.documents) {
+      batch.delete(document.reference);
+    }
+    await batch.commit();
 
     //Convert json to Firebase json and import to Firestore
     batch = Firestore.instance.batch();
     for (var itemJson in listData) {
-      var item = SpotDataModel.fromGoogleJson(itemJson);
+      var item = SpotDataModel.fromGoogleJson(itemJson, provinceKey);
 
       batch.setData(
-          Firestore.instance
-              .collection('provinces')
-              .document('ho_chi_minh')
-              .collection(item.districtKey)
-              .document(),
-          item.toJsonData());
+          Firestore.instance.collection('spots').document(), item.toJsonData());
     }
 
     batch.commit();
@@ -80,9 +84,11 @@ class CSVUtils {
     var completer = Completer<List>();
 
     try {
-      var response = await dio.get(
-          'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/o2hjwv2/public/values?alt=json');
+      var response = await dio.get(jsonLink);
       var list = response.data['feed']['entry'];
+      provinceKey = response.data['feed']['title']['\u0024t'];
+
+      print('provinceKey: $provinceKey');
 
       print('result=$list');
 
