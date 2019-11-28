@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppUtils {
@@ -32,5 +33,22 @@ class AppUtils {
   static void printWrapped(String text) {
     final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  static List<double> calculateMapRegion(LatLngBounds visibleRegion) {
+    double latStart = visibleRegion.southwest.latitude;
+    double latEnd = visibleRegion.northeast.latitude;
+    double widthExtra = (latEnd - latStart) * 0.25; // more 25% in each side
+
+    double longStart = visibleRegion.southwest.longitude;
+    double longEnd = visibleRegion.northeast.longitude;
+    double heightExtra = (longEnd - longStart) * 0.25; // more 25% in each side
+
+    return [
+      latStart - widthExtra,
+      latEnd + widthExtra,
+      longStart - heightExtra,
+      longEnd + heightExtra,
+    ];
   }
 }
