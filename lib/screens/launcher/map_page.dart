@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
+import 'package:travelspots/screens/launcher/map_bloc.dart';
 
 /// A class displays map UI
 class MapPage extends StatefulWidget {
@@ -20,8 +22,9 @@ class MapPage extends StatefulWidget {
 }
 
 /// A class displays map state
-class MapPageState extends State<MapPage> {
+class MapPageState extends BaseState<MapPage> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  MapBloc _mapBloc;
   MarkerId selectedMarker;
 //  LocationData _startLocation;
   Location _locationService = new Location();
@@ -41,7 +44,8 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
+//    _mapBloc = MapBloc();
+//    _mapBloc = providerOfBloc();
     initPlatformState();
     if (widget.spots != null && widget.spots.length > 0) {
       for (var i = 0; i < widget.spots.length; i++) {
@@ -131,7 +135,7 @@ class MapPageState extends State<MapPage> {
       position: LatLng(latitude, longtitude),
 //      infoWindow: InfoWindow(title: title, snippet: description),
       onTap: () {
-        _showModal(title, description);
+//        _mapBloc.notifyMarkerTapped();
       },
 //      onDragEnd: (LatLng position) {
 //        _onMarkerDragEnd(markerId, position);
@@ -162,6 +166,7 @@ class MapPageState extends State<MapPage> {
           _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
+            Fimber.d('MapView:onLocationChanged');
             if (!_isMoveToCurrentGps) {
               _currentCameraPosition = CameraPosition(
                   target: LatLng(result.latitude, result.longitude), zoom: 16);
@@ -200,20 +205,50 @@ class MapPageState extends State<MapPage> {
     });*/
   }
 
+  void _onDownloadClicked() {
+    Fimber.d('MapView:_onDownloadClicked');
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget buildChild(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Map'),
+        actions: <Widget>[
+          InkWell(
+            child: Container(
+              child: Text('Download'),
+              height: 60,
+//              width: 40,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(right: 16),
+            ),
+            onTap: () {
+              _onDownloadClicked();
+            },
+          )
+        ],
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        initialCameraPosition: _initialCamera,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(markers.values),
+      body: Stack(
+        children: <Widget>[
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            initialCameraPosition: _initialCamera,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            markers: Set<Marker>.of(markers.values),
+          ),
+          /*PropertyChangeConsumer<MapBloc>(
+            properties: [MapProperties.makerTapped],
+            builder: (context, bloc, property) {
+              return Container(
+                child: Text('fadsfds'),
+              );
+            },
+          )*/
+        ],
       ),
     );
   }
