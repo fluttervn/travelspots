@@ -2,14 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
+import 'package:travelspots/screens/launcher/map_bloc.dart';
 
 /// A class displays map UI
 class MapPage extends StatefulWidget {
   List<SpotUIModel> spots;
-  MapPage({@required this.spots});
+  MapPage({@required this.spots}) {
+    Fimber.d("MapPage @spots=${this.spots}");
+  }
   @override
   MapPageState createState() {
     return MapPageState();
@@ -17,8 +22,9 @@ class MapPage extends StatefulWidget {
 }
 
 /// A class displays map state
-class MapPageState extends State<MapPage> {
+class MapPageState extends BaseState<MapPage> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  MapBloc _mapBloc;
   MarkerId selectedMarker;
 //  LocationData _startLocation;
   Location _locationService = new Location();
@@ -38,13 +44,43 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
+//    _mapBloc = MapBloc();
+//    _mapBloc = providerOfBloc();
     initPlatformState();
+    if (widget.spots != null && widget.spots.length > 0) {
+      for (var i = 0; i < widget.spots.length; i++) {
+        SpotUIModel spotUIModel = widget.spots[i];
+        _addMarker(i + 1, spotUIModel.lat, spotUIModel.long, spotUIModel.name,
+            spotUIModel.description);
+      }
+    }
+  }
+
+  void _showModal(String title, String description) {
+    Future<void> future = showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Wrap(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(description),
+            ],
+          ),
+          padding: EdgeInsets.all(16),
+          height: 80,
+        );
+      },
+    );
+//    future.then((void value) => _closeModal(value));
   }
 
   void _onMarkerTapped(MarkerId markerId) {
     final Marker tappedMarker = markers[markerId];
-    if (tappedMarker != null) {
+    /*if (tappedMarker != null) {
       setState(() {
         if (markers.containsKey(selectedMarker)) {
           final Marker resetOld = markers[selectedMarker]
@@ -59,7 +95,7 @@ class MapPageState extends State<MapPage> {
         );
         markers[markerId] = newMarker;
       });
-    }
+    }*/
   }
 
   void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
@@ -88,20 +124,22 @@ class MapPageState extends State<MapPage> {
     }
   }
 
-  void _add(int index, double latitude, double longtitude) {
+  void _addMarker(int index, double latitude, double longtitude, String title,
+      String description) {
+    Fimber.d('MapPage _addMarker @title=$title, @description=$description');
     final String markerIdVal = 'marker_id_$index';
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(latitude, longtitude),
-      infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+//      infoWindow: InfoWindow(title: title, snippet: description),
       onTap: () {
-        _onMarkerTapped(markerId);
+//        _mapBloc.notifyMarkerTapped();
       },
-      onDragEnd: (LatLng position) {
-        _onMarkerDragEnd(markerId, position);
-      },
+//      onDragEnd: (LatLng position) {
+//        _onMarkerDragEnd(markerId, position);
+//      },
     );
 
     setState(() {
@@ -128,6 +166,7 @@ class MapPageState extends State<MapPage> {
           _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
+            Fimber.d('MapView:onLocationChanged');
             if (!_isMoveToCurrentGps) {
               _currentCameraPosition = CameraPosition(
                   target: LatLng(result.latitude, result.longitude), zoom: 16);
@@ -166,20 +205,50 @@ class MapPageState extends State<MapPage> {
     });*/
   }
 
+  void _onDownloadClicked() {
+    Fimber.d('MapView:_onDownloadClicked');
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget buildChild(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Map'),
+        actions: <Widget>[
+          InkWell(
+            child: Container(
+              child: Text('Download'),
+              height: 60,
+//              width: 40,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(right: 16),
+            ),
+            onTap: () {
+              _onDownloadClicked();
+            },
+          )
+        ],
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        initialCameraPosition: _initialCamera,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(markers.values),
+      body: Stack(
+        children: <Widget>[
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            initialCameraPosition: _initialCamera,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            markers: Set<Marker>.of(markers.values),
+          ),
+          /*PropertyChangeConsumer<MapBloc>(
+            properties: [MapProperties.makerTapped],
+            builder: (context, bloc, property) {
+              return Container(
+                child: Text('fadsfds'),
+              );
+            },
+          )*/
+        ],
       ),
     );
   }
