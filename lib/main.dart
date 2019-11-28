@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends BaseState<MyHomePage> {
   MainBloc _mainBloc;
   int _counter = 0;
+  List<SpotUIModel> spots;
 
   @override
   void initState() {
@@ -53,8 +54,8 @@ class _MyHomePageState extends BaseState<MyHomePage> {
     _mainBloc = providerOfBloc();
   }
 
-  void _getTravelSpots() {
-    _mainBloc.getTravelSpots();
+  void _getTravelSpots() async {
+    spots=await _mainBloc.getTravelSpots();
   }
 
   void _createTravelSpot() async {
@@ -159,7 +160,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                       onPressed: () {
                         // Open MapView page
                         Navigation.openScreen(
-                            context: context, page: MapPage());
+                            context: context, page: MapPage(spots: this.spots,));
                       },
                       child: Icon(Icons.map),
                     ),

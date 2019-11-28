@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
 
 /// A class displays map UI
 class MapPage extends StatefulWidget {
+  List<SpotUIModel> spots;
+  MapPage({@required this.spots});
   @override
   MapPageState createState() {
     return MapPageState();
@@ -15,6 +18,8 @@ class MapPage extends StatefulWidget {
 
 /// A class displays map state
 class MapPageState extends State<MapPage> {
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  MarkerId selectedMarker;
 //  LocationData _startLocation;
   Location _locationService = new Location();
   bool _permission = false;
@@ -35,6 +40,73 @@ class MapPageState extends State<MapPage> {
     super.initState();
 
     initPlatformState();
+  }
+
+  void _onMarkerTapped(MarkerId markerId) {
+    final Marker tappedMarker = markers[markerId];
+    if (tappedMarker != null) {
+      setState(() {
+        if (markers.containsKey(selectedMarker)) {
+          final Marker resetOld = markers[selectedMarker]
+              .copyWith(iconParam: BitmapDescriptor.defaultMarker);
+          markers[selectedMarker] = resetOld;
+        }
+        selectedMarker = markerId;
+        final Marker newMarker = tappedMarker.copyWith(
+          iconParam: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueGreen,
+          ),
+        );
+        markers[markerId] = newMarker;
+      });
+    }
+  }
+
+  void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
+    final Marker tappedMarker = markers[markerId];
+    if (tappedMarker != null) {
+      await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('OK'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+                content: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 66),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Old position: ${tappedMarker.position}'),
+                        Text('New position: $newPosition'),
+                      ],
+                    )));
+          });
+    }
+  }
+
+  void _add(int index, double latitude, double longtitude) {
+    final String markerIdVal = 'marker_id_$index';
+    final MarkerId markerId = MarkerId(markerIdVal);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(latitude, longtitude),
+      infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+      onTap: () {
+        _onMarkerTapped(markerId);
+      },
+      onDragEnd: (LatLng position) {
+        _onMarkerDragEnd(markerId, position);
+      },
+    );
+
+    setState(() {
+      markers[markerId] = marker;
+    });
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -107,6 +179,7 @@ class MapPageState extends State<MapPage> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        markers: Set<Marker>.of(markers.values),
       ),
     );
   }
