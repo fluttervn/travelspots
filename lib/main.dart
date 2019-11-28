@@ -119,7 +119,7 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                     itemCount: bloc.spots.length,
                     itemBuilder: (context, index) {
                       return Text(
-                        bloc.spots[index].name,
+                        bloc.spots[index].district,
                         style: TextStyle(color: Colors.blue),
                       );
                     },

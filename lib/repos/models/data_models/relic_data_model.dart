@@ -22,6 +22,9 @@ class SpotDataModel {
   /// District key
   String districtKey;
 
+  /// District key
+  String provinceKey;
+
   /// Lat
   double lat;
 
@@ -44,6 +47,7 @@ class SpotDataModel {
       this.address,
       this.district,
       this.districtKey,
+      this.provinceKey,
       this.lat,
       this.long,
       this.description,
@@ -61,6 +65,7 @@ class SpotDataModel {
       address: document['address'],
       district: document['district'],
       districtKey: document['district_key'],
+      provinceKey: document['province_key'],
       lat: document['lat'],
       long: document['long'],
       description: document['description'],
@@ -75,7 +80,8 @@ class SpotDataModel {
       'popularity': popularity,
       'address': address,
       'district': district,
-      'districtkey': districtKey,
+      'district_key': districtKey,
+      'province_key': provinceKey,
       'lat': lat,
       'long': long,
       'description': description,
@@ -90,11 +96,13 @@ class SpotDataModel {
       name: model.name,
       address: model.address,
       description: model.description,
+      district: model.district,
     );
   }
 
   // for importing data
-  factory SpotDataModel.fromGoogleJson(Map<String, dynamic> itemJson) {
+  factory SpotDataModel.fromGoogleJson(
+      Map<String, dynamic> itemJson, String provinceKey) {
     var id = itemJson['gsx\u0024id']['\u0024t'];
     var name = itemJson['gsx\u0024name']['\u0024t'];
     var popularity = itemJson['gsx\u0024popularity']['\u0024t'];
@@ -117,6 +125,7 @@ class SpotDataModel {
     print('description is: $description');
     print('website is: $website');
     print('imageLink is: $imageLink');
+    print('provinceKey is: $provinceKey');
 
     return SpotDataModel(
       id: id,
@@ -130,6 +139,7 @@ class SpotDataModel {
       description: description,
       website: website,
       imageLink: imageLink,
+      provinceKey: provinceKey,
     );
   }
 }
