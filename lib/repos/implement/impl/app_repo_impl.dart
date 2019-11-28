@@ -14,8 +14,8 @@ class AppRepoImpl extends AppRepo {
   @override
   Future<List<SpotDataModel>> getTravelSpotList() async {
     final QuerySnapshot result = await Firestore.instance
-        .collectionGroup('ho_chi_minh')
-        .where('districtkey', arrayContains: 'huyen_binh_chanh')
+        .collection('spots')
+        .where('district_key', isEqualTo: 'quan_1')
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     Fimber.d('document: $documents');
