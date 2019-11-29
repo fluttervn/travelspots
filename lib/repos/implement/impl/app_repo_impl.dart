@@ -129,11 +129,12 @@ class AppRepoImpl extends AppRepo {
   @override
   Future<List<ProvinceMetaModel>> getOutOfDateProvinces() async {
     var provinceList = await getProvinceMetaList();
+    print('server list : $provinceList');
     var localList = await localProvider.getAll();
     print('local list: $localList');
     if (localList == null) {
       localList = provinceList.map((item) => item.toJsonLocal()).toList();
       localProvider.setAll(localList);
-    }
+    } else {}
   }
 }

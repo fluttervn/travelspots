@@ -18,15 +18,17 @@ class LocalProvider {
 
   Future<List> getAll() async {
     SharedPreferences prefs = await _getPref();
-    List values = prefs.get(worksheetsKey);
+    String valueStr = prefs.get(worksheetsKey);
+    List values = jsonDecode(valueStr);
+    print('decode: $values');
     return values;
   }
 
-  Future setAll(dynamic input) async {
+  Future setAll(List input) async {
     SharedPreferences prefs = await _getPref();
-    List<String> stringList =
-        (jsonDecode(input) as List<dynamic>).cast<String>();
-    print('value: $stringList');
-//    List values = prefs.set
+    String encodeStr = jsonEncode(input);
+    print('encode: $encodeStr');
+
+    prefs.setString(worksheetsKey, encodeStr);
   }
 }
