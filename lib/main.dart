@@ -169,10 +169,9 @@ class _MyHomePageState extends BaseState<MyHomePage> {
                       onPressed: () {
                         // Open MapView page
                         Navigation.openScreen(
-                            context: context,
-                            page: MapPage(
-                              spots: this.spots,
-                            ));
+                          context: context,
+                          page: MapPage(),
+                        );
                       },
                       child: Icon(Icons.map),
                     ),

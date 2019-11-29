@@ -79,7 +79,7 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   }
 
   /// Method to test Firestore query
-  Future<void> findSpotsInRegion({
+  Future<List<SpotEntity>> findSpotsInRegion({
     @required double latStart,
     @required double latEnd,
     @required double longStart,
@@ -88,5 +88,6 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
     List<SpotEntity> items =
         await spotDao.findSpotsInRegion(latStart, latEnd, longStart, longEnd);
     Fimber.d('There are ${items?.length} item whenfindSpotsInRegion');
+    return items;
   }
 }

@@ -9,16 +9,16 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/main_bloc.dart';
-import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
+import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/screens/launcher/map_bloc.dart';
 import 'package:travelspots/utils/app_utils.dart';
 
 /// A class displays map UI
 class MapPage extends StatefulWidget {
-  List<SpotUIModel> spots;
+  /*List<SpotUIModel> spots;
   MapPage({@required this.spots}) {
     Fimber.d("MapPage @spots=${this.spots}");
-  }
+  }*/
   @override
   MapPageState createState() {
     return MapPageState();
@@ -27,10 +27,11 @@ class MapPage extends StatefulWidget {
 
 /// A class displays map state
 class MapPageState extends BaseState<MapPage> {
+  List<SpotEntity> _listSpotEntity;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MapBloc _mapBloc;
   MainBloc _mainBloc;
-  SpotUIModel selectedSpot;
+  SpotEntity _selectedSpotEntity;
   StreamSubscription<LocationData> _locationSubscription;
   Location _locationService = new Location();
   bool _permission = false;
@@ -53,38 +54,10 @@ class MapPageState extends BaseState<MapPage> {
     _mainBloc = providerOfBloc();
 
     initPlatformState();
-    if (widget.spots != null && widget.spots.length > 0) {
-      for (var i = 0; i < widget.spots.length; i++) {
-        SpotUIModel spotUIModel = widget.spots[i];
-        _addMarker(i + 1, spotUIModel);
-      }
-    }
   }
 
-  void _showModal(String title, String description) {
-    Future<void> future = showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          child: Wrap(
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(description),
-            ],
-          ),
-          padding: EdgeInsets.all(16),
-          height: 80,
-        );
-      },
-    );
-//    future.then((void value) => _closeModal(value));
-  }
-
-  void _onMarkerTapped(SpotUIModel spotUIModel) {
-    selectedSpot = spotUIModel;
+  void _onMarkerTapped(SpotEntity spotEntity) {
+    _selectedSpotEntity = spotEntity;
     _mapBloc.notifyMarkerTapped();
   }
 
@@ -114,25 +87,26 @@ class MapPageState extends BaseState<MapPage> {
     }
   }
 
-  void _addMarker(int index, SpotUIModel spotUIModel) {
+  void _addMarker(int index, SpotEntity spotEntity) {
     Fimber.d(
-        'MapPage _addMarker @title=${spotUIModel.name}, @description=${spotUIModel.description}');
+        'MapPage _addMarker @title=${spotEntity.name}, @description=${spotEntity.description}');
     final String markerIdVal = 'marker_id_$index';
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
       markerId: markerId,
-      position: LatLng(spotUIModel.lat, spotUIModel.long),
+      position: LatLng(spotEntity.lat, spotEntity.long),
 //      infoWindow: InfoWindow(title: title, snippet: description),
       onTap: () {
-        _onMarkerTapped(spotUIModel);
+        _onMarkerTapped(spotEntity);
       },
 //      onDragEnd: (LatLng position) {
 //        _onMarkerDragEnd(markerId, position);
 //      },
     );
-
-    markers[markerId] = marker;
+    setState(() {
+      markers[markerId] = marker;
+    });
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -201,12 +175,19 @@ class MapPageState extends BaseState<MapPage> {
     List newRegion = AppUtils.calculateMapRegion(visibleRegion);
     Fimber.d('new extra region =$newRegion');
 
-    _mainBloc.findSpotsInRegion(
+    _listSpotEntity = await _mainBloc.findSpotsInRegion(
       latStart: newRegion[0],
       latEnd: newRegion[1],
       longStart: newRegion[2],
       longEnd: newRegion[3],
     );
+    if (_listSpotEntity != null && _listSpotEntity.length > 0) {
+      for (var i = 0; i < _listSpotEntity.length; i++) {
+        SpotEntity spotEntity = _listSpotEntity[i];
+        _addMarker(i + 1, spotEntity);
+      }
+      _isMoveToCurrentGps = false;
+    }
   }
 
   @override
@@ -239,7 +220,8 @@ class MapPageState extends BaseState<MapPage> {
         // height of the sheet.
         return Container(
           height: 100,
-          child: Text(selectedSpot.name),
+          child:
+              Text('${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'),
           padding: EdgeInsets.all(16),
         );
       },
