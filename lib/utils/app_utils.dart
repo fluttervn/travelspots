@@ -51,4 +51,30 @@ class AppUtils {
       longEnd + heightExtra,
     ];
   }
+
+  static parseIntOrException(String value) {
+    return int.parse(value);
+  }
+
+  static parseInt(String value, int defaultValue) {
+    if (value == null || value.isEmpty) {
+      return defaultValue;
+    }
+    try {
+      return int.parse(value);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  static parseDouble(String value, double defaultValue) {
+    if (value == null || value.isEmpty) {
+      return defaultValue;
+    }
+    try {
+      return double.parse(value);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
 }
