@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import 'app_utils.dart';
@@ -12,7 +13,7 @@ final String json_HaNoi =
 final String json_HoChiMinh =
     'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/o2hjwv2/public/values?alt=json';
 
-final String jsonLink = json_HaNoi;
+String jsonLink = json_HaNoi;
 
 String provinceKey;
 
@@ -49,6 +50,23 @@ class CSVUtils {
     }, onError: (e) {
       print(e.toString());
     });
+  }
+
+  static Future<List<SpotEntity>> importDataFromGoogleSheetsForSaigon() async {
+    jsonLink = json_HoChiMinh;
+    provinceKey = 'ho_chi_minh';
+
+    //Get json from google
+    var listData = await _getJsonData();
+
+    List<SpotEntity> listSpotEntity = listData
+        .map((item) => SpotEntity.fromGoogleJson(
+              item,
+              provinceKey,
+              'Hồ Chí Minh',
+            ))
+        .toList();
+    return listSpotEntity;
   }
 
   static importJsonDataToFirestore() async {
