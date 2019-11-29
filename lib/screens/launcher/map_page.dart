@@ -223,7 +223,7 @@ class MapPageState extends BaseState<MapPage> {
   Widget _buildBottomSheet() {
     return SlidingSheet(
       elevation: 8,
-      cornerRadius: 16,
+//      cornerRadius: 16,
       /*snapSpec: const SnapSpec(
         // Enable snapping. This is true by default.
         snap: true,
