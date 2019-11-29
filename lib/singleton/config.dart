@@ -1,6 +1,9 @@
+import 'package:travelspots/custom_packages/worker/worker.dart';
 import 'package:travelspots/repos/app_repo.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/implement/impl/app_repo_impl.dart';
+import 'package:travelspots/repos/local/local_provider.dart';
+import 'package:travelspots/repos/remote/remote_provider.dart';
 
 /// Flavor is the app flavor (schema)
 enum Flavor {
@@ -22,6 +25,10 @@ enum Flavor {
 
 /// A class help getting actual repository
 class Config {
+  static RemoteProvider _remoteProvider = RemoteProvider();
+  static LocalProvider _localProvider = LocalProvider();
+  static Worker _worker = Worker(poolSize: 3);
+
   static Config _singleton;
 
   /// Get a non-null instance of Config
@@ -38,7 +45,10 @@ class Config {
   /// Method to get app repository
   AppRepo getAppRepo() {
     if (_appRepo == null) {
-      _appRepo = AppRepoImpl();
+      _appRepo = AppRepoImpl(
+          remoteProvider: _remoteProvider,
+          localProvider: _localProvider,
+          worker: _worker);
     }
     return _appRepo;
   }
