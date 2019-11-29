@@ -220,8 +220,8 @@ class MapPageState extends BaseState<MapPage> {
         // height of the sheet.
         return Container(
           height: 100,
-          child:
-              Text('${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'),
+          child: Text(
+              '${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'),
           padding: EdgeInsets.all(16),
         );
       },
