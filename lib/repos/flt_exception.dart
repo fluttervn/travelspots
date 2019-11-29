@@ -1,8 +1,5 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-
-import 'endpoint.dart';
 
 /// A class defines exception type
 enum ExceptionType {
@@ -116,18 +113,6 @@ class FltException implements Exception {
         break;
       case ExceptionType.LoginUserNotFound:
         return _localMessage = translate('login_user_not_found');
-        break;
-      case ExceptionType.Response:
-        if (endpoint == Endpoint.login) {
-          try {
-            switch (code) {
-              case 400:
-                _localMessage = translate('password_invalidate');
-            }
-          } on Exception catch (e) {
-            Fimber.d('Error getting localizeMessage: ${e.toString()}');
-          }
-        }
         break;
       case ExceptionType.Network:
         _localMessage = translate('error_no_internet');

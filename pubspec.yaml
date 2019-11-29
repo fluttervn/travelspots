@@ -36,6 +36,7 @@ dependencies:
   google_maps_flutter: ^0.5.21+12
   location: ^2.3.5
   sliding_sheet: ^0.1.4
+  shared_preferences: ^0.5.4+6
 
 dev_dependencies:
   flutter_test:
