@@ -48,7 +48,7 @@ class MapPageState extends BaseState<MapPage> {
   @override
   void initState() {
     super.initState();
-    _mapBloc = MapBloc();
+    _mapBloc = providerOfBloc();
     _mainBloc = providerOfBloc();
 
     initPlatformState();
@@ -211,7 +211,11 @@ class MapPageState extends BaseState<MapPage> {
   @override
   void dispose() {
     super.dispose();
-    _locationSubscription.cancel();
+    Fimber.d('MapView:dispose');
+    _mapBloc.notifyMarkerUnTapped();
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
   }
 
   @override
