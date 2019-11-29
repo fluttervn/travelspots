@@ -14,6 +14,9 @@ abstract class AppRepo {
   /// Method to call getting Province meta
   Future<List<ProvinceMetaModel>> getProvinceMetaList();
 
+  /// Method to get list of Province which need to update
+  Future<List<ProvinceMetaModel>> getOutOfDateProvinces();
+
   /// Method to call getting Relics
   Future<List<SpotDataModel>> getTravelSpotList();
 

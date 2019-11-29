@@ -12,7 +12,7 @@ class ProvinceMetaModel {
   String name;
 
   /// Popularity
-  DateTime lastUpdate;
+  int lastUpdate;
 
   ProvinceMetaModel(
       {this.worksheetId, this.spreadsheetId, this.name, this.lastUpdate});
@@ -25,12 +25,11 @@ class ProvinceMetaModel {
   /// Constructor RelicData Model
   factory ProvinceMetaModel.fromDocument(DocumentSnapshot document) {
     print('document data: ${document.data}');
-    Timestamp timestamp = document['last_update'];
     return ProvinceMetaModel(
       worksheetId: document['spreadsheet_id'],
       name: document['name'],
       spreadsheetId: document['spreadsheet_id'],
-      lastUpdate: timestamp.toDate(),
+      lastUpdate: document['last_update'],
     );
   }
 
