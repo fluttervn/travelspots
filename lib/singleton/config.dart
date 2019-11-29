@@ -1,4 +1,5 @@
 import 'package:travelspots/repos/app_repo.dart';
+import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/implement/impl/app_repo_impl.dart';
 
 /// Flavor is the app flavor (schema)
@@ -32,6 +33,7 @@ class Config {
   }
 
   AppRepo _appRepo;
+  AppDatabase appDatabase;
 
   /// Method to get app repository
   AppRepo getAppRepo() {
