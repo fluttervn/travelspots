@@ -88,8 +88,8 @@ class MapPageState extends BaseState<MapPage> {
   }
 
   void _addMarker(int index, SpotEntity spotEntity) {
-    Fimber.d(
-        'MapPage _addMarker @title=${spotEntity.name}, @description=${spotEntity.description}');
+//    Fimber.d(
+//        'MapPage _addMarker @title=${spotEntity.name}, @description=${spotEntity.description}');
     final String markerIdVal = 'marker_id_$index';
     final MarkerId markerId = MarkerId(markerIdVal);
 
@@ -112,7 +112,7 @@ class MapPageState extends BaseState<MapPage> {
   /// Platform messages are asynchronous, so we initialize in an async method.
   initPlatformState() async {
     await _locationService.changeSettings(
-        accuracy: LocationAccuracy.HIGH, interval: 1000);
+        accuracy: LocationAccuracy.LOW, interval: 60000);
 
     LocationData location;
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -124,8 +124,13 @@ class MapPageState extends BaseState<MapPage> {
         print("Permission: $_permission");
         if (_permission) {
           location = await _locationService.getLocation();
+          _currentCameraPosition = CameraPosition(
+              target: LatLng(location.latitude, location.longitude), zoom: 16);
+          final GoogleMapController controller = await _controller.future;
+          controller.animateCamera(
+              CameraUpdate.newCameraPosition(_currentCameraPosition));
 
-          _locationSubscription = _locationService
+          /*_locationSubscription = _locationService
               .onLocationChanged()
               .listen((LocationData result) async {
             if (!_isMoveToCurrentGps) {
@@ -134,16 +139,17 @@ class MapPageState extends BaseState<MapPage> {
                   target: LatLng(result.latitude, result.longitude), zoom: 16);
 
               final GoogleMapController controller = await _controller.future;
-              controller.animateCamera(
+              await controller.animateCamera(
                   CameraUpdate.newCameraPosition(_currentCameraPosition));
-              /*if(mounted){
+//              _onGetNearbyPoi();
+              */ /*if(mounted){
               setState(() {
                 _currentLocation = result;
               });
-            }*/
+            }*/ /*
               _isMoveToCurrentGps = true;
             }
-          });
+          });*/
         }
       } else {
         bool serviceStatusResult = await _locationService.requestService();
@@ -181,7 +187,7 @@ class MapPageState extends BaseState<MapPage> {
       longStart: newRegion[2],
       longEnd: newRegion[3],
     );
-    if (_listSpotEntity != null && _listSpotEntity.length > 0) {
+    if (_listSpotEntity != null && _listSpotEntity.length < 100) {
       for (var i = 0; i < _listSpotEntity.length; i++) {
         SpotEntity spotEntity = _listSpotEntity[i];
         _addMarker(i + 1, spotEntity);
@@ -249,6 +255,9 @@ class MapPageState extends BaseState<MapPage> {
             initialCameraPosition: _initialCamera,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
+            },
+            onCameraIdle: () {
+              _onGetNearbyPoi();
             },
             markers: Set<Marker>.of(markers.values),
           ),
