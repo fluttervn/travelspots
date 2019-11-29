@@ -48,7 +48,7 @@ class MapPageState extends BaseState<MapPage> {
   @override
   void initState() {
     super.initState();
-//    _mapBloc = MapBloc();
+    _mapBloc = MapBloc();
     _mainBloc = providerOfBloc();
 
     initPlatformState();
@@ -131,9 +131,7 @@ class MapPageState extends BaseState<MapPage> {
 //      },
     );
 
-    setState(() {
-      markers[markerId] = marker;
-    });
+    markers[markerId] = marker;
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -218,6 +216,7 @@ class MapPageState extends BaseState<MapPage> {
 
   @override
   Widget buildChild(BuildContext context) {
+    Fimber.d('MapView:buildChild');
     return Scaffold(
       appBar: AppBar(
         title: Text('Map'),
@@ -240,11 +239,15 @@ class MapPageState extends BaseState<MapPage> {
             markers: Set<Marker>.of(markers.values),
           ),
           PropertyChangeConsumer<MapBloc>(
-            properties: [MapProperties.makerTapped],
+            properties: [
+              MapProperties.markerTapped,
+              MapProperties.markerUnTapped
+            ],
             builder: (context, bloc, property) {
-              if (property == MapProperties.makerTapped) {
+              Fimber.d('MapView @property=$property');
+              if (property == MapProperties.markerTapped) {
                 return Container(
-                  child: Text('fasdfdasa'),
+                  child: Text('Marker tapped'),
                 );
               } else {
                 return Container();
