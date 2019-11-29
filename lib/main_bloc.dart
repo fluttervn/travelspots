@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:travelspots/repos/implement/impl/app_database.dart';
+import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/utils/csv_utils.dart';
 
 import 'common/base_bloc.dart';
 import 'repos/app_repo.dart';
@@ -14,7 +17,8 @@ import 'repos/models/ui_models/relic_ui_model.dart';
 class MainBloc extends BaseBloc<BaseBlocProperties> {
   /// Provide account data from network or local
   final AppRepo appRepo;
-  List<SpotUIModel> spots;
+  final SpotDao spotDao;
+  List<SpotUIModel> spots = [];
 
   /// Error message
   String errorMessage = '';
@@ -22,7 +26,8 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   /// Create instance of AccountBloc, it require repository to get data.
   MainBloc({
     @required this.appRepo,
-  }) : assert(appRepo != null);
+    @required this.spotDao,
+  }) : assert(appRepo != null && spotDao != null);
 
   @override
   String toString() {
@@ -33,10 +38,18 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   Future<List<SpotUIModel>> getTravelSpots() async {
     try {
       notifyListeners(BaseBlocProperties.loading);
-      List<SpotDataModel> relicsData = await appRepo.getTravelSpotList();
+      /*List<SpotDataModel> relicsData = await appRepo.getTravelSpotList();
       spots = relicsData.map((item) => SpotUIModel.fromData(item)).toList();
+      Fimber.d('relic data: ${spots.length} items');*/
 
-      Fimber.d('relic data: $spots');
+      final stopwatch = Stopwatch()..start();
+      Fimber.d('~~~ START: Insert to database');
+      List<SpotEntity> listSpotEntity =
+          await CSVUtils.importDataFromGoogleSheetsForSaigon();
+      Fimber.d('~~~ ... with ${listSpotEntity?.length} items');
+      spotDao.insertDataFirstTime(listSpotEntity);
+      var elapsedTimeMs = stopwatch.elapsed.inMilliseconds;
+      Fimber.d('~~~ END: Insert to database SUCCESS: take $elapsedTimeMs ms');
 
       notifyListeners(BaseBlocProperties.serverSuccess);
       return spots;
