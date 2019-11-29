@@ -67,15 +67,9 @@ class _MyHomePageState extends BaseState<MyHomePage> {
     spots = await _mainBloc.getTravelSpots();
   }
 
-  void _createTravelSpot() async {
-    _counter++;
-    await _mainBloc.createTravelSpot(
-      SpotUIModel(
-          name: 'Địa đạo Củ Chi $_counter',
-          address:
-              'Xã Phú Mỹ Hưng, xã Phạm Văn Cội, xã Nhuận Đức, huyện Củ Chi',
-          description: 'Di tích lịch sử Địa đạo Củ Chi '),
-    );
+  void _checkUpdate() async {
+    print('check update');
+    await _mainBloc.checkUpdateData();
   }
 
   @override
@@ -85,8 +79,8 @@ class _MyHomePageState extends BaseState<MyHomePage> {
         title: Text('Travel Spots'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
-            onPressed: _createTravelSpot,
+            icon: Icon(Icons.update),
+            onPressed: _checkUpdate,
           ),
           IconButton(
             icon: Icon(Icons.import_export),

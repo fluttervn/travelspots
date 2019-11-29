@@ -91,4 +91,16 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
         longStart: longStart,
         longEnd: longEnd);
   }
+
+  Future checkUpdateData() async {
+    print('checkUpdateData');
+//    var list = await appRepo.getProvinceMetaList();
+//    print('list: $list');
+
+    var list = await appRepo.importGSheetData(
+      '1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E',
+      'o2hjwv2',
+      'Hô Chí Minh',
+    );
+  }
 }

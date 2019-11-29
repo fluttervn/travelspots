@@ -1,15 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:travelspots/custom_packages/worker/worker.dart';
+import 'package:travelspots/repos/isolate_tasks/get_gsheet_task.dart';
+import 'package:travelspots/repos/local/local_provider.dart';
+import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
 import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
+import 'package:travelspots/repos/remote/remote_provider.dart';
 
 import '../../app_repo.dart';
+import 'task_utils.dart';
 
 /// Implementation of AppRepo
+/// [remoteProvider] responsible for handling data from network
+/// [localProvider] responsible for handling data from local
 /// [worker] object help calling method in other isolate (other process)
 class AppRepoImpl extends AppRepo {
+  /// Remote provider
+  final RemoteProvider remoteProvider;
+
+  /// Local provider
+  final LocalProvider localProvider;
+
+  /// Worker
+  final Worker worker;
+
   /// Constructor AppRepoImpl
-  AppRepoImpl();
+  AppRepoImpl({this.remoteProvider, this.localProvider, this.worker});
 
   @override
   Future<List<SpotDataModel>> getTravelSpotList() async {
@@ -69,5 +88,41 @@ class AppRepoImpl extends AppRepo {
       return false;
     }
     return null;
+  }
+
+  @override
+  Future<List<SpotEntity>> importGSheetData(
+      String spreadSheetId, String workSheetId, String provinceName) async {
+    var task = GetGSheetTask(
+      remoteProvider: remoteProvider,
+      spreadSheetId: spreadSheetId,
+      workSheetId: workSheetId,
+      provinceName: provinceName,
+    );
+    var results = await handleWorkerTask<List<SpotEntity>>(
+      worker: worker,
+      task: task,
+    );
+    return results;
+  }
+
+  @override
+  Future<List<ProvinceMetaModel>> getProvinceMetaList() async {
+    print('getProvinceMetaList');
+    try {
+      final QuerySnapshot result =
+          await Firestore.instance.collection('provinces').getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      print('document: $documents');
+
+      var listMeta = documents
+          .map((document) => ProvinceMetaModel.fromDocument(document))
+          .toList();
+      print('list meta: $listMeta');
+      return listMeta;
+    } catch (e) {
+      Fimber.d('createRelic error: $e');
+      return null;
+    }
   }
 }

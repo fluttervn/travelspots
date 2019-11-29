@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -76,5 +77,24 @@ class AppUtils {
     } catch (e) {
       return defaultValue;
     }
+  }
+
+  /// Method help convert pattern to real url
+  /// For example, pattern '/category/{qa_id}'
+  /// values ['123']
+  /// Real url will be '/category/123'
+  static String mapURLPatternValue(String urlStr, {List values}) {
+    var newUrl = urlStr;
+    Fimber.d('before map: $newUrl');
+    if (values != null) {
+      for (int i = 0; i < values.length; i++) {
+        var firstLeftBrace = newUrl.indexOf('{');
+        var firstRightBrace = newUrl.indexOf('}');
+        newUrl = newUrl.replaceRange(
+            firstLeftBrace, firstRightBrace + 1, values[i].toString());
+      }
+    }
+    Fimber.d('after map: $newUrl');
+    return newUrl;
   }
 }

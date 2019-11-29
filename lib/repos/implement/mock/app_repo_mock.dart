@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
 import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import '../../app_repo.dart';
@@ -30,6 +32,19 @@ class AppRepoMock extends AppRepo {
     @required double longEnd,
   }) async {
     // TODO: implement testQueryByGeolocation
+    return null;
+  }
+
+  @override
+  Future<List<SpotEntity>> importGSheetData(
+      String spreadSheetId, String workSheetId, String provinceName) {
+    // TODO: implement importGSheetData
+    return null;
+  }
+
+  @override
+  Future<List<ProvinceMetaModel>> getProvinceMetaList() {
+    // TODO: implement getProvinceMetaList
     return null;
   }
 }
