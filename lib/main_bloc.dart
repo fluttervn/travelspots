@@ -79,16 +79,14 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
   }
 
   /// Method to test Firestore query
-  Future<void> testQueryByGeolocation({
+  Future<void> findSpotsInRegion({
     @required double latStart,
     @required double latEnd,
     @required double longStart,
     @required double longEnd,
   }) async {
-    await appRepo.testQueryByGeolocation(
-        latStart: latStart,
-        latEnd: latEnd,
-        longStart: longStart,
-        longEnd: longEnd);
+    List<SpotEntity> items =
+        await spotDao.findSpotsInRegion(latStart, latEnd, longStart, longEnd);
+    Fimber.d('There are ${items?.length} item whenfindSpotsInRegion');
   }
 }

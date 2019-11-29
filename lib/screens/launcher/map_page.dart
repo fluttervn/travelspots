@@ -201,7 +201,7 @@ class MapPageState extends BaseState<MapPage> {
     List newRegion = AppUtils.calculateMapRegion(visibleRegion);
     Fimber.d('new extra region =$newRegion');
 
-    _mainBloc.testQueryByGeolocation(
+    _mainBloc.findSpotsInRegion(
       latStart: newRegion[0],
       latEnd: newRegion[1],
       longStart: newRegion[2],

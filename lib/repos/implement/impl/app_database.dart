@@ -15,7 +15,12 @@ abstract class SpotDao {
   Future<List<SpotEntity>> getAll();
 
   @Query('SELECT * FROM SpotEntity WHERE id = :id')
-  Future<SpotEntity> findPersonById(int id);
+  Future<SpotEntity> findSpotById(int id);
+
+  @Query('SELECT * FROM SpotEntity WHERE lat > :latStart AND lat < :latEnd '
+      'AND long > :longStart AND long < :longEnd')
+  Future<List<SpotEntity>> findSpotsInRegion(
+      double latStart, double latEnd, double longStart, double longEnd);
 
   @Insert(onConflict: OnConflictStrategy.REPLACE)
   Future<void> insertSpot(SpotEntity item);

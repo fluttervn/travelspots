@@ -145,9 +145,18 @@ class _$SpotDao extends SpotDao {
   }
 
   @override
-  Future<SpotEntity> findPersonById(int id) async {
+  Future<SpotEntity> findSpotById(int id) async {
     return _queryAdapter.query('SELECT * FROM SpotEntity WHERE id = ?',
         arguments: <dynamic>[id], mapper: _spotEntityMapper);
+  }
+
+  @override
+  Future<List<SpotEntity>> findSpotsInRegion(
+      double latStart, double latEnd, double longStart, double longEnd) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ?',
+        arguments: <dynamic>[latStart, latEnd, longStart, longEnd],
+        mapper: _spotEntityMapper);
   }
 
   @override
