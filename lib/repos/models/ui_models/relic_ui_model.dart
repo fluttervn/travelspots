@@ -3,7 +3,7 @@ import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 /// RelicsUI Model
 class SpotUIModel {
   /// id
-  String id;
+  int id;
 
   /// Name
   String name;

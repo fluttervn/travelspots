@@ -5,7 +5,7 @@ import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
 /// RelicData Model
 class SpotDataModel {
   /// id
-  String id;
+  int id;
 
   /// Name
   String name;
@@ -59,7 +59,7 @@ class SpotDataModel {
   factory SpotDataModel.fromDocument(DocumentSnapshot document) {
     Fimber.d('document data: ${document.data}');
     return SpotDataModel(
-      id: document.documentID,
+      id: document.documentID as int,
       name: document['name'],
       popularity: document['popularity'],
       address: document['address'],
