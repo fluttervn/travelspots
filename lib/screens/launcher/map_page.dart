@@ -6,6 +6,7 @@ import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/main_bloc.dart';
 import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
@@ -48,7 +49,7 @@ class MapPageState extends BaseState<MapPage> {
   @override
   void initState() {
     super.initState();
-//    _mapBloc = MapBloc();
+    _mapBloc = providerOfBloc();
     _mainBloc = providerOfBloc();
 
     initPlatformState();
@@ -131,9 +132,7 @@ class MapPageState extends BaseState<MapPage> {
 //      },
     );
 
-    setState(() {
-      markers[markerId] = marker;
-    });
+    markers[markerId] = marker;
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -213,11 +212,43 @@ class MapPageState extends BaseState<MapPage> {
   @override
   void dispose() {
     super.dispose();
-    _locationSubscription.cancel();
+    Fimber.d('MapView:dispose');
+    _mapBloc.notifyMarkerUnTapped();
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
+  }
+
+  ///Build bottom sheet
+  Widget _buildBottomSheet() {
+    return SlidingSheet(
+      elevation: 8,
+//      cornerRadius: 16,
+      /*snapSpec: const SnapSpec(
+        // Enable snapping. This is true by default.
+        snap: true,
+        // Set custom snapping points.
+        snappings: [0.4, 0.7, 1.0],
+        // Define to what the snappings relate to. In this case,
+        // the total available space that the sheet can expand to.
+        positioning: SnapPositioning.relativeToAvailableSpace,
+      ),*/
+      builder: (context, state) {
+        // This is the content of the sheet that will get
+        // scrolled, if the content is bigger than the available
+        // height of the sheet.
+        return Container(
+          height: 100,
+          child: Text(selectedSpot.name),
+          padding: EdgeInsets.all(16),
+        );
+      },
+    );
   }
 
   @override
   Widget buildChild(BuildContext context) {
+    Fimber.d('MapView:buildChild');
     return Scaffold(
       appBar: AppBar(
         title: Text('Map'),
@@ -240,11 +271,15 @@ class MapPageState extends BaseState<MapPage> {
             markers: Set<Marker>.of(markers.values),
           ),
           PropertyChangeConsumer<MapBloc>(
-            properties: [MapProperties.makerTapped],
+            properties: [
+              MapProperties.markerTapped,
+              MapProperties.markerUnTapped
+            ],
             builder: (context, bloc, property) {
-              if (property == MapProperties.makerTapped) {
+              Fimber.d('MapView @property=$property');
+              if (property == MapProperties.markerTapped) {
                 return Container(
-                  child: Text('fasdfdasa'),
+                  child: _buildBottomSheet(),
                 );
               } else {
                 return Container();
