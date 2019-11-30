@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
 import 'package:travelspots/utils/csv_utils.dart';
 
 import 'common/base_bloc.dart';
@@ -96,7 +97,8 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
 //    var list = await appRepo.getProvinceMetaList();
 //    print('list: $list');
 
-    var localList = appRepo.getOutOfDateProvinces();
+    List<ProvinceMetaModel> provinces = await appRepo.getOutOfDateProvinces();
+    print('Out of date provinces are: $provinces');
 
 //    var list = await appRepo.importGSheetData(
 //      '1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E',

@@ -128,12 +128,29 @@ class AppRepoImpl extends AppRepo {
 
   @override
   Future<List<ProvinceMetaModel>> getOutOfDateProvinces() async {
-    var provinceList = await getProvinceMetaList();
-    var localList = await localProvider.getAll();
-    print('local list: $localList');
-    if (localList == null) {
-      localList = provinceList.map((item) => item.toJsonLocal()).toList();
-      localProvider.setAll(localList);
+    List<ProvinceMetaModel> serverList = await getProvinceMetaList();
+    Map<String, int> localIdTime = await localProvider.getAll();
+
+    // Compare local list vs. server list
+    List<ProvinceMetaModel> outOfDateList = [];
+    Map<String, int> localIdTimeAll = Map();
+
+    print('serverList: $serverList');
+    print('localIdTime: $localIdTime');
+
+    serverList.forEach((provinceMetaModel) {
+      String key = provinceMetaModel.worksheetId;
+      var localLastUpdate = localIdTime == null ? 0 : localIdTime[key] ?? 0;
+      print('check out of date: key=$key: localLastUpdate: $localLastUpdate, '
+          'serverLastUpdate=${provinceMetaModel.lastUpdate}');
+      if (provinceMetaModel.lastUpdate > localLastUpdate) {
+        outOfDateList.add(provinceMetaModel);
+      }
+      localIdTimeAll[key] = provinceMetaModel.lastUpdate;
+    });
+    if (outOfDateList.isNotEmpty) {
+      localProvider.setAll(localIdTimeAll);
     }
+    return outOfDateList;
   }
 }
