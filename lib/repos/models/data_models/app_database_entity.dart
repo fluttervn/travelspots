@@ -43,7 +43,7 @@ class SpotEntity {
     String provinceKey,
     String province,
   ) {
-    print('fromGoogleJson: $itemJson');
+    // print('fromGoogleJson: $itemJson');
     getOfKey(String key) {
       var val1 = itemJson['gsx\u0024$key'];
       if (val1 != null) {
