@@ -26,7 +26,7 @@ class ProvinceMetaModel {
   factory ProvinceMetaModel.fromDocument(DocumentSnapshot document) {
     print('document data: ${document.data}');
     return ProvinceMetaModel(
-      worksheetId: document['spreadsheet_id'],
+      worksheetId: document['worksheet_id'],
       name: document['name'],
       spreadsheetId: document['spreadsheet_id'],
       lastUpdate: document['last_update'],
