@@ -22,7 +22,10 @@ class SpotDataModel {
   /// District key
   String districtKey;
 
-  /// District key
+  /// Province
+  String province;
+
+  /// Province key
   String provinceKey;
 
   /// Lat
@@ -40,19 +43,21 @@ class SpotDataModel {
   /// Image link
   String imageLink;
 
-  SpotDataModel(
-      {this.id,
-      this.name,
-      this.popularity,
-      this.address,
-      this.district,
-      this.districtKey,
-      this.provinceKey,
-      this.lat,
-      this.long,
-      this.description,
-      this.website,
-      this.imageLink});
+  SpotDataModel({
+    this.id,
+    this.name,
+    this.popularity,
+    this.address,
+    this.district,
+    this.districtKey,
+    this.province,
+    this.provinceKey,
+    this.lat,
+    this.long,
+    this.description,
+    this.website,
+    this.imageLink,
+  });
 
   /// Constructor RelicData Model
 
@@ -82,6 +87,7 @@ class SpotDataModel {
       'district': district,
       'district_key': districtKey,
       'province_key': provinceKey,
+      'province': province,
       'lat': lat,
       'long': long,
       'description': description,
@@ -102,7 +108,7 @@ class SpotDataModel {
 
   // for importing data
   factory SpotDataModel.fromGoogleJson(
-      Map<String, dynamic> itemJson, String provinceKey) {
+      Map<String, dynamic> itemJson, String provinceKey, String province) {
     var id = itemJson['gsx\u0024id']['\u0024t'];
     var name = itemJson['gsx\u0024name']['\u0024t'];
     var popularity = itemJson['gsx\u0024popularity']['\u0024t'];
