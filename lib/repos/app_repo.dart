@@ -15,7 +15,10 @@ abstract class AppRepo {
   Future<List<ProvinceMetaModel>> getProvinceMetaList();
 
   /// Method to get list of Province which need to update
-  Future<List<ProvinceMetaModel>> getOutOfDateProvinces();
+  Future<ProvinceMetaData> getOutOfDateProvinces();
+
+  /// Update province meta data
+  Future setProvinceMetaList(Map<String, int> localIdTimeAll);
 
   /// Method to call getting Relics
   Future<List<SpotDataModel>> getTravelSpotList();
@@ -28,4 +31,18 @@ abstract class AppRepo {
     @required double longStart,
     @required double longEnd,
   });
+}
+
+class ProvinceMetaData {
+  /// Full province metadata from server
+  final List<ProvinceMetaModel> serverList;
+
+  /// Mapper of Full province metadata from server to the cache province
+  /// metadata
+  final Map<String, int> localIdTimeAll;
+
+  /// The list of out-of-date province metadata which needs to update
+  final List<ProvinceMetaModel> outOfDateList;
+
+  ProvinceMetaData({this.serverList, this.localIdTimeAll, this.outOfDateList});
 }

@@ -49,8 +49,14 @@ class AppRepoMock extends AppRepo {
   }
 
   @override
-  Future<List<ProvinceMetaModel>> getOutOfDateProvinces() {
+  Future<ProvinceMetaData> getOutOfDateProvinces() {
     // TODO: implement getOutOfDateProvinces
+    return null;
+  }
+
+  @override
+  Future setProvinceMetaList(Map<String, int> localIdTimeAll) {
+    // TODO: implement setProvinceMetaList
     return null;
   }
 }

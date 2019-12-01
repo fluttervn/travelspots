@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
-import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
 import 'package:travelspots/utils/csv_utils.dart';
 
 import 'common/base_bloc.dart';
@@ -97,8 +96,29 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
 //    var list = await appRepo.getProvinceMetaList();
 //    print('list: $list');
 
-    List<ProvinceMetaModel> provinces = await appRepo.getOutOfDateProvinces();
-    print('Out of date provinces are: $provinces');
+    try {
+      ProvinceMetaData provinceMetaData = await appRepo.getOutOfDateProvinces();
+      var outOfDateList = provinceMetaData.outOfDateList;
+      print('Out of date provinces are: $outOfDateList');
+
+      if (outOfDateList != null && outOfDateList.isNotEmpty) {
+        print('Fetching new data of ${outOfDateList.length} provinces');
+        List<Future<List<SpotEntity>>> tasks = [];
+        outOfDateList.forEach((province) {
+          tasks.add(appRepo.importGSheetData(
+            province.spreadsheetId,
+            province.worksheetId,
+            province.name,
+          ));
+        });
+        List<List<SpotEntity>> data = await Future.wait(tasks);
+        print('Update multiple ${data?.length} provinces DONE: ');
+
+        appRepo.setProvinceMetaList(provinceMetaData.localIdTimeAll);
+      }
+    } on FltException catch (e) {
+      print('checkUpdateData err: $e');
+    }
 
 //    var list = await appRepo.importGSheetData(
 //      '1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E',

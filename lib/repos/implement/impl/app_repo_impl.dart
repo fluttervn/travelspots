@@ -127,7 +127,7 @@ class AppRepoImpl extends AppRepo {
   }
 
   @override
-  Future<List<ProvinceMetaModel>> getOutOfDateProvinces() async {
+  Future<ProvinceMetaData> getOutOfDateProvinces() async {
     List<ProvinceMetaModel> serverList = await getProvinceMetaList();
     Map<String, int> localIdTime = await localProvider.getAll();
 
@@ -151,6 +151,18 @@ class AppRepoImpl extends AppRepo {
     if (outOfDateList.isNotEmpty) {
       localProvider.setAll(localIdTimeAll);
     }
-    return outOfDateList;
+
+    ProvinceMetaData provinceMetaData = ProvinceMetaData(
+      serverList: serverList,
+      localIdTimeAll: localIdTimeAll,
+      outOfDateList: outOfDateList,
+    );
+    return provinceMetaData;
+  }
+
+  @override
+  Future setProvinceMetaList(Map<String, int> localIdTimeAll) {
+    localProvider.setAll(localIdTimeAll);
+    return null;
   }
 }
