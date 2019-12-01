@@ -114,7 +114,11 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
         List<List<SpotEntity>> data = await Future.wait(tasks);
         print('Update multiple ${data?.length} provinces DONE: ');
 
-        appRepo.setProvinceMetaList(provinceMetaData.localIdTimeAll);
+        List<SpotEntity> fullData = [];
+        data.forEach((item) => fullData.addAll(item));
+        print('Total SpotEntity is: ${fullData.length} items');
+        await appRepo.setTravelSpotList(fullData);
+        await appRepo.setProvinceMetaList(provinceMetaData.localIdTimeAll);
       }
     } on FltException catch (e) {
       print('checkUpdateData err: $e');

@@ -59,4 +59,10 @@ class AppRepoMock extends AppRepo {
     // TODO: implement setProvinceMetaList
     return null;
   }
+
+  @override
+  Future setTravelSpotList(List<SpotEntity> items) {
+    // TODO: implement setTravelSpotList
+    return null;
+  }
 }
