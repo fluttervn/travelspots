@@ -46,9 +46,11 @@ class Config {
   AppRepo getAppRepo() {
     if (_appRepo == null) {
       _appRepo = AppRepoImpl(
-          remoteProvider: _remoteProvider,
-          localProvider: _localProvider,
-          worker: _worker);
+        remoteProvider: _remoteProvider,
+        localProvider: _localProvider,
+        appDatabase: appDatabase,
+        worker: _worker,
+      );
     }
     return _appRepo;
   }
