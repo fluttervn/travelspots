@@ -25,16 +25,33 @@ abstract class SpotDao {
   @Insert(onConflict: OnConflictStrategy.REPLACE)
   Future<void> insertSpot(SpotEntity item);
 
-  @insert
+  @Insert(onConflict: OnConflictStrategy.REPLACE)
   Future<void> insertSpots(List<SpotEntity> items);
 
   @Query('DELETE FROM SpotEntity')
   Future<void> deleteAll();
 
+  @Query('DELETE FROM SpotEntity where uniqueKey = :uniqueKey')
+  Future<void> deleteAllOfProvince(String uniqueKey);
+
+  @Query('DELETE FROM SpotEntity where uniqueKey IN (:uniqueKeys)')
+  Future<void> deleteAllOfProvinces(List<String> uniqueKeys);
+
   @transaction
   Future<void> insertDataFirstTime(List<SpotEntity> items) async {
     await deleteAll();
     await insertSpots(items);
+  }
+
+  /// Update new Spot data to database, also clear all existing Spot data of
+  /// these provinces in database
+  @transaction
+  Future<void> updateTravelSpotList(
+    List<SpotEntity> spotList,
+    List<String> uniqueKeys,
+  ) async {
+    await deleteAllOfProvinces(uniqueKeys);
+    await insertSpots(spotList);
   }
 }
 

@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `provinceKey` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `website` TEXT, `imageLink` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `website` TEXT, `imageLink` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -101,11 +101,11 @@ class _$SpotDao extends SpotDao {
             'SpotEntity',
             (SpotEntity item) => <String, dynamic>{
                   'id': item.id,
+                  'uniqueKey': item.uniqueKey,
                   'name': item.name,
                   'popularity': item.popularity,
                   'address': item.address,
                   'province': item.province,
-                  'provinceKey': item.provinceKey,
                   'district': item.district,
                   'districtKey': item.districtKey,
                   'lat': item.lat,
@@ -123,11 +123,11 @@ class _$SpotDao extends SpotDao {
 
   static final _spotEntityMapper = (Map<String, dynamic> row) => SpotEntity(
       row['id'] as int,
+      row['uniqueKey'] as String,
       row['name'] as String,
       row['popularity'] as int,
       row['address'] as String,
       row['province'] as String,
-      row['provinceKey'] as String,
       row['district'] as String,
       row['districtKey'] as String,
       row['lat'] as double,
@@ -165,6 +165,20 @@ class _$SpotDao extends SpotDao {
   }
 
   @override
+  Future<void> deleteAllOfProvince(String uniqueKey) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM SpotEntity where uniqueKey = ?',
+        arguments: <dynamic>[uniqueKey]);
+  }
+
+  @override
+  Future<void> deleteAllOfProvinces(List<String> uniqueKeys) async {
+    final valueList1 = uniqueKeys.map((value) => "'$value'").join(', ');
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM SpotEntity where uniqueKey IN ($valueList1)');
+  }
+
+  @override
   Future<void> insertSpot(SpotEntity item) async {
     await _spotEntityInsertionAdapter.insert(
         item, sqflite.ConflictAlgorithm.replace);
@@ -173,7 +187,7 @@ class _$SpotDao extends SpotDao {
   @override
   Future<void> insertSpots(List<SpotEntity> items) async {
     await _spotEntityInsertionAdapter.insertList(
-        items, sqflite.ConflictAlgorithm.abort);
+        items, sqflite.ConflictAlgorithm.replace);
   }
 
   @override
@@ -186,6 +200,22 @@ class _$SpotDao extends SpotDao {
         final transactionDatabase = _$AppDatabase(changeListener)
           ..database = transaction;
         await transactionDatabase.spotDao.insertDataFirstTime(items);
+      });
+    }
+  }
+
+  @override
+  Future<void> updateTravelSpotList(
+      List<SpotEntity> spotList, List<String> uniqueKeys) async {
+    if (database is sqflite.Transaction) {
+      await super.updateTravelSpotList(spotList, uniqueKeys);
+    } else {
+      await (database as sqflite.Database)
+          .transaction<void>((transaction) async {
+        final transactionDatabase = _$AppDatabase(changeListener)
+          ..database = transaction;
+        await transactionDatabase.spotDao
+            .updateTravelSpotList(spotList, uniqueKeys);
       });
     }
   }
