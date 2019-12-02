@@ -3,6 +3,9 @@ import 'package:travelspots/common/base_bloc.dart';
 
 /// enum BaseBlocProperties
 enum MapProperties {
+  /// current location found
+  locationFound,
+
   /// marker added
   markerAdded,
 
@@ -20,6 +23,11 @@ class MapBloc extends BaseBloc<MapProperties> {
     return 'MapBloc';
   }
 
+  /// Notify that location found
+  void notifyLocationFound() {
+    notifyListeners(MapProperties.locationFound);
+  }
+
   /// Notify that marker added
   void notifyMarkerAdded() {
     notifyListeners(MapProperties.markerAdded);
@@ -34,5 +42,10 @@ class MapBloc extends BaseBloc<MapProperties> {
   /// Notify that marker untapped
   void notifyMarkerUnTapped() {
     notifyListeners(MapProperties.markerUnTapped);
+  }
+
+  /// Reset map properties
+  void resetMapPropeties() {
+    notifyListeners(null);
   }
 }
