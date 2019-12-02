@@ -8,7 +8,7 @@ import 'package:travelspots/repos/isolate_tasks/get_gsheet_task.dart';
 import 'package:travelspots/repos/local/local_provider.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
-import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
+import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 import 'package:travelspots/repos/remote/remote_provider.dart';
 
 import '../../app_repo.dart';

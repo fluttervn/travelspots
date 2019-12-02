@@ -11,7 +11,7 @@ class ProvinceMetaModel {
   /// Name
   String name;
 
-  /// Popularity
+  /// Last update
   int lastUpdate;
 
   ProvinceMetaModel(

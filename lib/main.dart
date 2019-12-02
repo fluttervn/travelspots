@@ -11,7 +11,7 @@ import 'package:travelspots/utils/navigation.dart';
 import 'common/base_bloc.dart';
 import 'common/base_state.dart';
 import 'main_bloc.dart';
-import 'repos/models/ui_models/relic_ui_model.dart';
+import 'repos/models/ui_models/spot_ui_model.dart';
 import 'singleton/config.dart';
 import 'utils/csv_utils.dart';
 

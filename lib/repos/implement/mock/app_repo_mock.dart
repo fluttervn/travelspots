@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
-import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
+import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 
 import '../../app_repo.dart';
 

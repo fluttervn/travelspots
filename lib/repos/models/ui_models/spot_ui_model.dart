@@ -1,4 +1,4 @@
-import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
+import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 
 /// RelicsUI Model
 class SpotUIModel {

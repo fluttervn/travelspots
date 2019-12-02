@@ -10,8 +10,8 @@ import 'package:travelspots/utils/csv_utils.dart';
 import 'common/base_bloc.dart';
 import 'repos/app_repo.dart';
 import 'repos/flt_exception.dart';
-import 'repos/models/data_models/relic_data_model.dart';
-import 'repos/models/ui_models/relic_ui_model.dart';
+import 'repos/models/data_models/spot_data_model.dart';
+import 'repos/models/ui_models/spot_ui_model.dart';
 
 /// Business Logic related to Login feature
 class MainBloc extends BaseBloc<BaseBlocProperties> {

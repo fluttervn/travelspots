@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fimber/fimber.dart';
-import 'package:travelspots/repos/models/ui_models/relic_ui_model.dart';
+import 'package:travelspots/repos/models/ui_models/spot_ui_model.dart';
 
 /// RelicData Model
 class SpotDataModel {
