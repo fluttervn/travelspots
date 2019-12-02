@@ -28,15 +28,19 @@ class MapPage extends StatefulWidget {
 /// A class displays map state
 class MapPageState extends BaseState<MapPage> {
   List<SpotEntity> _listSpotEntity;
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   MapBloc _mapBloc;
   MainBloc _mainBloc;
   SpotEntity _selectedSpotEntity;
   StreamSubscription<LocationData> _locationSubscription;
   Location _locationService = new Location();
   bool _permission = false;
-  String error;
+  String _error;
   bool _isMoveToCurrentGps = false;
+  MarkerId selectedMarker;
+  int _startTime;
+  int _endTime;
+  BitmapDescriptor _markerIcon;
 
   Completer<GoogleMapController> _controller = Completer();
   /*CameraPosition _initialCamera = CameraPosition(
@@ -46,8 +50,8 @@ class MapPageState extends BaseState<MapPage> {
   );*/
   static final double ZOOM = 16;
   CameraPosition _initialCamera = CameraPosition(
-    target:
-        LatLng(10.762622, 106.660172), // Ho Chi Minh City(10.762622,106.660172)
+    target: LatLng(
+        10.7720894, 106.698282), // Ben Thanh Market(10.762622,106.660172)
     zoom: ZOOM,
   );
 
@@ -58,37 +62,62 @@ class MapPageState extends BaseState<MapPage> {
     super.initState();
     _mapBloc = providerOfBloc();
     _mainBloc = providerOfBloc();
-
+    _startTime = DateTime.now().millisecond;
+    Fimber.d('MapView initState with @startTime=$_startTime');
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(48, 48)),
+            'assets/images/flutter_vn_logo.jpg')
+        .then((onValue) {
+      _markerIcon = onValue;
+    });
     initPlatformState();
   }
 
-  void _onMarkerTapped(SpotEntity spotEntity) {
+  void _onMarkerTapped(SpotEntity spotEntity, MarkerId markerId) {
     _selectedSpotEntity = spotEntity;
+    final Marker tappedMarker = _markers[markerId];
+
+    /*if (tappedMarker != null) {
+      if (_markers.containsKey(selectedMarker)) {
+        final Marker resetOld = _markers[selectedMarker]
+            .copyWith(iconParam: BitmapDescriptor.defaultMarker);
+        _markers[selectedMarker] = resetOld;
+      }
+      selectedMarker = markerId;
+      final Marker newMarker = tappedMarker.copyWith(
+        iconParam: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueGreen,
+        ),
+//        iconParam: _markerIcon,
+      );
+      _markers[markerId] = newMarker;
+    }*/
     _mapBloc.notifyMarkerTapped();
   }
 
   void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
-    final Marker tappedMarker = markers[markerId];
+    final Marker tappedMarker = _markers[markerId];
     if (tappedMarker != null) {
       await showDialog<void>(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-                actions: <Widget>[
-                  FlatButton(
-                    child: const Text('OK'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  )
-                ],
-                content: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 66),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text('Old position: ${tappedMarker.position}'),
-                        Text('New position: $newPosition'),
-                      ],
-                    )));
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+              content: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 66),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('Old position: ${tappedMarker.position}'),
+                    Text('New position: $newPosition'),
+                  ],
+                ),
+              ),
+            );
           });
     }
   }
@@ -104,13 +133,13 @@ class MapPageState extends BaseState<MapPage> {
       position: LatLng(spotEntity.lat, spotEntity.long),
 //      infoWindow: InfoWindow(title: title, snippet: description),
       onTap: () {
-        _onMarkerTapped(spotEntity);
+        _onMarkerTapped(spotEntity, markerId);
       },
 //      onDragEnd: (LatLng position) {
 //        _onMarkerDragEnd(markerId, position);
 //      },
     );
-    markers[markerId] = marker;
+    _markers[markerId] = marker;
 //    _mapBloc.notifyMarkerAdded();
     /*setState(() {
       markers[markerId] = marker;
@@ -132,6 +161,9 @@ class MapPageState extends BaseState<MapPage> {
         print("Permission: $_permission");
         if (_permission) {
           location = await _locationService.getLocation();
+          _endTime = DateTime.now().millisecond;
+          Fimber.d(
+              'MapView get location with @endTime=$_endTime and @totalTime=${_endTime - _startTime}');
           _currentCameraPosition = CameraPosition(
               target: LatLng(location.latitude, location.longitude),
               zoom: ZOOM);
@@ -172,16 +204,12 @@ class MapPageState extends BaseState<MapPage> {
     } on PlatformException catch (e) {
       print(e);
       if (e.code == 'PERMISSION_DENIED') {
-        error = e.message;
+        _error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        error = e.message;
+        _error = e.message;
       }
       location = null;
     }
-/*
-    setState(() {
-      _startLocation = location;
-    });*/
   }
 
   void _onGetNearbyPoi() async {
@@ -203,7 +231,9 @@ class MapPageState extends BaseState<MapPage> {
         SpotEntity spotEntity = _listSpotEntity[i];
         _addMarker(i + 1, spotEntity);
       }
-      _mapBloc.notifyMarkerAdded();
+      /*_mapBloc.notifyMarkerAdded();*/
+      //setState to update marker
+      setState(() {});
       _isMoveToCurrentGps = false;
     }
   }
@@ -224,7 +254,7 @@ class MapPageState extends BaseState<MapPage> {
     return SlidingSheet(
       elevation: 8,
 //      cornerRadius: 16,
-      /*snapSpec: const SnapSpec(
+      snapSpec: const SnapSpec(
         // Enable snapping. This is true by default.
         snap: true,
         // Set custom snapping points.
@@ -232,19 +262,39 @@ class MapPageState extends BaseState<MapPage> {
         // Define to what the snappings relate to. In this case,
         // the total available space that the sheet can expand to.
         positioning: SnapPositioning.relativeToAvailableSpace,
-      ),*/
+      ),
       builder: (context, state) {
         // This is the content of the sheet that will get
         // scrolled, if the content is bigger than the available
         // height of the sheet.
         return Container(
-          height: 100,
+          height: MediaQuery.of(context).size.height,
           child:
               Text('${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'
                   '\nUniqueKey: ${_selectedSpotEntity.uniqueKey}'),
           padding: EdgeInsets.all(16),
         );
       },
+    );
+  }
+
+  Widget _buildGoogleMap() {
+    return GoogleMap(
+      mapType: MapType.normal,
+      myLocationEnabled: true,
+      initialCameraPosition: _initialCamera,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+        Fimber.d('init: MapView: onMapCreated');
+      },
+      onCameraMoveStarted: () {
+        Fimber.d('MapView:onCameraMoveStarted');
+      },
+      onCameraIdle: () {
+        Fimber.d('init: MapView: onCameraIdle');
+        _onGetNearbyPoi();
+      },
+      markers: Set<Marker>.of(_markers.values),
     );
   }
 
@@ -265,42 +315,33 @@ class MapPageState extends BaseState<MapPage> {
         children: <Widget>[
           PropertyChangeConsumer<MapBloc>(
             properties: [
-              MapProperties.locationFound,
-              MapProperties.markerAdded
+//              MapProperties.locationFound,
+//              MapProperties.markerAdded
+              MapProperties.markerTapped
             ],
             builder: (context, bloc, property) {
               Fimber.d('MapView display googlemap @property=$property');
-              if (property == null) {
-                return Container(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                  ),
-                  alignment: Alignment.center,
-                );
-              } else if (property == MapProperties.locationFound ||
-                  property == MapProperties.markerAdded) {
-                return GoogleMap(
-                  mapType: MapType.normal,
-                  myLocationEnabled: true,
-                  initialCameraPosition: _initialCamera,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    Fimber.d('init: MapView: onMapCreated');
-                  },
-                  onCameraMoveStarted: () {
-                    Fimber.d('MapView:onCameraMoveStarted');
-                  },
-                  onCameraIdle: () {
-                    Fimber.d('init: MapView: onCameraIdle');
-                    _onGetNearbyPoi();
-                  },
-                  markers: Set<Marker>.of(markers.values),
-                );
-              } else {
-                return Container();
-              }
+
+              return _buildGoogleMap();
             },
           ),
+          /*GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            initialCameraPosition: _initialCamera,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              Fimber.d('init: MapView: onMapCreated');
+            },
+            onCameraMoveStarted: () {
+              Fimber.d('MapView:onCameraMoveStarted');
+            },
+            onCameraIdle: () {
+              Fimber.d('init: MapView: onCameraIdle');
+              _onGetNearbyPoi();
+            },
+            markers: Set<Marker>.of(_markers.values),
+          ),*/
           PropertyChangeConsumer<MapBloc>(
             properties: [
               MapProperties.markerTapped,
