@@ -3,6 +3,7 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:travelspots/custom_packages/worker/worker.dart';
+import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/isolate_tasks/get_gsheet_task.dart';
 import 'package:travelspots/repos/local/local_provider.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
@@ -24,11 +25,18 @@ class AppRepoImpl extends AppRepo {
   /// Local provider
   final LocalProvider localProvider;
 
+  final AppDatabase appDatabase;
+
   /// Worker
   final Worker worker;
 
   /// Constructor AppRepoImpl
-  AppRepoImpl({this.remoteProvider, this.localProvider, this.worker});
+  AppRepoImpl({
+    this.remoteProvider,
+    this.localProvider,
+    this.appDatabase,
+    this.worker,
+  });
 
   @override
   Future<List<SpotDataModel>> getTravelSpotList() async {
@@ -127,13 +135,48 @@ class AppRepoImpl extends AppRepo {
   }
 
   @override
-  Future<List<ProvinceMetaModel>> getOutOfDateProvinces() async {
-    var provinceList = await getProvinceMetaList();
-    var localList = await localProvider.getAll();
-    print('local list: $localList');
-    if (localList == null) {
-      localList = provinceList.map((item) => item.toJsonLocal()).toList();
-      localProvider.setAll(localList);
+  Future<ProvinceMetaData> getOutOfDateProvinces() async {
+    List<ProvinceMetaModel> serverList = await getProvinceMetaList();
+    Map<String, int> localIdTime = await localProvider.getAll();
+
+    // Compare local list vs. server list
+    List<ProvinceMetaModel> outOfDateList = [];
+    Map<String, int> localIdTimeAll = Map();
+
+    print('serverList: $serverList');
+    print('localIdTime: $localIdTime');
+
+    serverList.forEach((provinceMetaModel) {
+      String key = provinceMetaModel.worksheetId;
+      var localLastUpdate = localIdTime == null ? 0 : localIdTime[key] ?? 0;
+      print('check out of date: key=$key: localLastUpdate: $localLastUpdate, '
+          'serverLastUpdate=${provinceMetaModel.lastUpdate}');
+      if (provinceMetaModel.lastUpdate > localLastUpdate) {
+        outOfDateList.add(provinceMetaModel);
+      }
+      localIdTimeAll[key] = provinceMetaModel.lastUpdate;
+    });
+    if (outOfDateList.isNotEmpty) {
+      localProvider.setAll(localIdTimeAll);
     }
+
+    ProvinceMetaData provinceMetaData = ProvinceMetaData(
+      serverList: serverList,
+      localIdTimeAll: localIdTimeAll,
+      outOfDateList: outOfDateList,
+    );
+    return provinceMetaData;
+  }
+
+  @override
+  Future setProvinceMetaList(Map<String, int> localIdTimeAll) {
+    localProvider.setAll(localIdTimeAll);
+    return null;
+  }
+
+  @override
+  Future setTravelSpotList(List<SpotEntity> items) async {
+    await appDatabase.spotDao.insertDataFirstTime(items);
+    return null;
   }
 }
