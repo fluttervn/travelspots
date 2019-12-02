@@ -111,7 +111,7 @@ class MapPageState extends BaseState<MapPage> {
 //      },
     );
     markers[markerId] = marker;
-    _mapBloc.notifyMarkerAdded();
+//    _mapBloc.notifyMarkerAdded();
     /*setState(() {
       markers[markerId] = marker;
     });*/
@@ -203,18 +203,20 @@ class MapPageState extends BaseState<MapPage> {
         SpotEntity spotEntity = _listSpotEntity[i];
         _addMarker(i + 1, spotEntity);
       }
+      _mapBloc.notifyMarkerAdded();
       _isMoveToCurrentGps = false;
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     Fimber.d('MapView:dispose');
-    _mapBloc.resetMapPropeties();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _mapBloc.resetMapPropeties());
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
     }
+    super.dispose();
   }
 
   ///Build bottom sheet

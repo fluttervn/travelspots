@@ -46,6 +46,7 @@ class MapBloc extends BaseBloc<MapProperties> {
 
   /// Reset map properties
   void resetMapPropeties() {
+    Fimber.d('MapBloc:resetMapPropeties');
     notifyListeners(null);
   }
 }
