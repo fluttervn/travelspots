@@ -6,6 +6,7 @@ import 'package:travelspots/common/demo_search_page.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/screens/launcher/map_bloc.dart';
 import 'package:travelspots/screens/launcher/map_page.dart';
+import 'package:travelspots/screens/launcher/splash_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 import 'common/base_bloc.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: SplashPage(),
     );
 
     tree = PropertyChangeProvider(value: _mainBloc, child: tree);
