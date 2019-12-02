@@ -7,6 +7,9 @@ class SpotDataModel {
   /// id
   int id;
 
+  // Unique key, is the combination of spreadsheetId + worksheetId
+  String uniqueKey;
+
   /// Name
   String name;
 
@@ -25,9 +28,6 @@ class SpotDataModel {
   /// Province
   String province;
 
-  /// Province key
-  String provinceKey;
-
   /// Lat
   double lat;
 
@@ -45,13 +45,13 @@ class SpotDataModel {
 
   SpotDataModel({
     this.id,
+    this.uniqueKey,
     this.name,
     this.popularity,
     this.address,
     this.district,
     this.districtKey,
     this.province,
-    this.provinceKey,
     this.lat,
     this.long,
     this.description,
@@ -70,7 +70,6 @@ class SpotDataModel {
       address: document['address'],
       district: document['district'],
       districtKey: document['district_key'],
-      provinceKey: document['province_key'],
       lat: document['lat'],
       long: document['long'],
       description: document['description'],
@@ -82,11 +81,11 @@ class SpotDataModel {
   Map<String, dynamic> toJsonData() {
     return {
       'name': name,
+      'uniqueKey': uniqueKey,
       'popularity': popularity,
       'address': address,
       'district': district,
       'district_key': districtKey,
-      'province_key': provinceKey,
       'province': province,
       'lat': lat,
       'long': long,
@@ -108,7 +107,7 @@ class SpotDataModel {
 
   // for importing data
   factory SpotDataModel.fromGoogleJson(
-      Map<String, dynamic> itemJson, String provinceKey, String province) {
+      Map<String, dynamic> itemJson, String uniqueKey, String province) {
     var id = itemJson['gsx\u0024id']['\u0024t'];
     var name = itemJson['gsx\u0024name']['\u0024t'];
     var popularity = itemJson['gsx\u0024popularity']['\u0024t'];
@@ -131,10 +130,11 @@ class SpotDataModel {
     print('description is: $description');
     print('website is: $website');
     print('imageLink is: $imageLink');
-    print('provinceKey is: $provinceKey');
+    print('uniqueKey is: $uniqueKey');
 
     return SpotDataModel(
       id: id,
+      uniqueKey: uniqueKey,
       name: name,
       popularity: int.parse(popularity == '' ? '3' : popularity),
       address: address,
@@ -145,7 +145,6 @@ class SpotDataModel {
       description: description,
       website: website,
       imageLink: imageLink,
-      provinceKey: provinceKey,
     );
   }
 }

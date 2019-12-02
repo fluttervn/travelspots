@@ -9,17 +9,25 @@ class ProvinceMetaModel {
   String spreadsheetId;
 
   /// Name
-  String name;
+  String provinceName;
 
   /// Last update
   int lastUpdate;
 
+  // Unique is the combination of spreadsheetId + worksheetId
+  String uniqueKey;
+
   ProvinceMetaModel(
-      {this.worksheetId, this.spreadsheetId, this.name, this.lastUpdate});
+      {this.worksheetId,
+      this.spreadsheetId,
+      this.provinceName,
+      this.lastUpdate}) {
+    uniqueKey = '$spreadsheetId-$worksheetId';
+  }
 
   @override
   String toString() {
-    return 'ProvinceMetaModel{worksheetId: $worksheetId, spreadsheetId: $spreadsheetId, name: $name, lastUpdate: $lastUpdate}';
+    return 'ProvinceMetaModel{worksheetId: $worksheetId, spreadsheetId: $spreadsheetId, provinceName: $provinceName, lastUpdate: $lastUpdate}';
   }
 
   /// Constructor RelicData Model
@@ -27,7 +35,7 @@ class ProvinceMetaModel {
     print('document data: ${document.data}');
     return ProvinceMetaModel(
       worksheetId: document['worksheet_id'],
-      name: document['name'],
+      provinceName: document['province_name'],
       spreadsheetId: document['spreadsheet_id'],
       lastUpdate: document['last_update'],
     );
@@ -35,7 +43,7 @@ class ProvinceMetaModel {
 
   Map<String, dynamic> toJsonLocal() {
     return {
-      worksheetId: lastUpdate,
+      uniqueKey: lastUpdate,
     };
   }
 }

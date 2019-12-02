@@ -6,11 +6,11 @@ import 'package:travelspots/utils/app_utils.dart';
 class SpotEntity {
   @primaryKey
   final int id;
+  final String uniqueKey;
   final String name;
   final int popularity;
   final String address;
   final String province;
-  final String provinceKey;
   final String district;
   final String districtKey;
   final double lat;
@@ -24,11 +24,11 @@ class SpotEntity {
   /// Note that Floor doesn't have support for named parameter in constructor yet
   SpotEntity(
     this.id,
+    this.uniqueKey,
     this.name,
     this.popularity,
     this.address,
     this.province,
-    this.provinceKey,
     this.district,
     this.districtKey,
     this.lat,
@@ -41,7 +41,7 @@ class SpotEntity {
   // for importing data
   factory SpotEntity.fromGoogleJson(
     Map<String, dynamic> itemJson,
-    String provinceKey,
+    String uniqueKey,
     String province,
   ) {
     // print('fromGoogleJson: $itemJson');
@@ -75,15 +75,15 @@ class SpotEntity {
     print('description is: $description');
     print('website is: $website');
     print('imageLink is: $imageLink');
-    print('provinceKey is: $provinceKey');*/
+    print('uniqueKey is: uniqueKey');*/
 
     return SpotEntity(
       AppUtils.parseIntOrException(id),
+      uniqueKey,
       name,
       AppUtils.parseInt(popularity, 4),
       address,
       province,
-      provinceKey,
       district,
       districtKey,
       AppUtils.parseDouble(lat, 10.7771437),
@@ -97,11 +97,11 @@ class SpotEntity {
   factory SpotEntity.fromDatModel(SpotDataModel item) {
     return SpotEntity(
       item.id,
+      item.uniqueKey,
       item.name,
       item.popularity,
       item.address,
       item.province,
-      item.provinceKey,
       item.district,
       item.districtKey,
       item.lat,

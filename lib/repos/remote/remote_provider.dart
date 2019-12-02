@@ -111,8 +111,8 @@ class RemoteProvider {
       convertToModel: (response) {
         List jsonList = response.data['feed']['entry'];
         return jsonList
-            .map((itemJson) =>
-                SpotEntity.fromGoogleJson(itemJson, workSheetId, provinceName))
+            .map((itemJson) => SpotEntity.fromGoogleJson(
+                itemJson, '$spreadSheetId-$workSheetId', provinceName))
             .toList();
       },
     );
