@@ -37,7 +37,7 @@ class RemoteProvider {
   }) async {
     print('$requestName request: params = $queryParams');
     var response = await dio.get(path, queryParameters: queryParams);
-    AppUtils.printWrapped('$requestName response= ${response.toString()}');
+    // AppUtils.printWrapped('$requestName response= ${response.toString()}');
     return response;
   }
 
@@ -53,9 +53,9 @@ class RemoteProvider {
       data: postData,
       queryParameters: queryParams,
     );
-    AppUtils.printWrapped(
+    /*AppUtils.printWrapped(
       '$requestName response= ${response.toString()}',
-    );
+    );*/
     return response;
   }
 

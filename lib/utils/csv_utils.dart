@@ -8,14 +8,32 @@ import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 
 import 'app_utils.dart';
 
-final String json_HaNoi =
-    'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/oxci3z6/public/values?alt=json';
-final String json_HoChiMinh =
-    'https://spreadsheets.google.com/feeds/list/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/o2hjwv2/public/values?alt=json';
+class ProvinceConfig {
+  final String jsonLink;
+  final String provinceKey;
+  final String province;
 
-String jsonLink = json_HaNoi;
+  const ProvinceConfig({this.jsonLink, this.provinceKey, this.province});
+}
 
-String provinceKey;
+const String jsonLinkPrefix = 'https://spreadsheets.google.com/feeds/list';
+const String jsonLinkPostfix = 'public/values?alt=json';
+
+const ProvinceConfig configHaNoi = ProvinceConfig(
+  jsonLink:
+      '$jsonLinkPrefix/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/oxci3z6/$jsonLinkPostfix',
+  province: 'Hà Nội',
+  provinceKey: 'ha_noi',
+);
+
+const ProvinceConfig configHoChiMinh = ProvinceConfig(
+  jsonLink:
+      '$jsonLinkPostfix/1PmcJMSFHiJo8J1-RALHcV-7pU41xAhabxvw3tnBHi7E/o2hjwv2/$jsonLinkPostfix',
+  province: 'Hồ Chí Minh',
+  provinceKey: 'ho_chi_minh',
+);
+
+ProvinceConfig currentConfig = configHoChiMinh;
 
 class CSVUtils {
   static readLocalTSV() async {
@@ -53,17 +71,15 @@ class CSVUtils {
   }
 
   static Future<List<SpotEntity>> importDataFromGoogleSheetsForSaigon() async {
-    jsonLink = json_HoChiMinh;
-    provinceKey = 'ho_chi_minh';
-
+    currentConfig = configHoChiMinh;
     //Get json from google
     var listData = await _getJsonData();
 
     List<SpotEntity> listSpotEntity = listData
         .map((item) => SpotEntity.fromGoogleJson(
               item,
-              provinceKey,
-              'Hồ Chí Minh',
+              currentConfig.provinceKey,
+              currentConfig.province,
             ))
         .toList();
     return listSpotEntity;
@@ -78,7 +94,7 @@ class CSVUtils {
     batch = Firestore.instance.batch();
     var snapshot = await Firestore.instance
         .collection('spots')
-        .where('province_key', isEqualTo: provinceKey)
+        .where('province_key', isEqualTo: currentConfig.provinceKey)
         .getDocuments();
     for (DocumentSnapshot document in snapshot.documents) {
       batch.delete(document.reference);
@@ -88,7 +104,11 @@ class CSVUtils {
     //Convert json to Firebase json and import to Firestore
     batch = Firestore.instance.batch();
     for (var itemJson in listData) {
-      var item = SpotDataModel.fromGoogleJson(itemJson, provinceKey);
+      var item = SpotDataModel.fromGoogleJson(
+        itemJson,
+        currentConfig.provinceKey,
+        currentConfig.province,
+      );
 
       batch.setData(
           Firestore.instance.collection('spots').document(), item.toJsonData());
@@ -102,11 +122,11 @@ class CSVUtils {
     var completer = Completer<List>();
 
     try {
-      var response = await dio.get(jsonLink);
+      var response = await dio.get(currentConfig.jsonLink);
       var list = response.data['feed']['entry'];
-      provinceKey = response.data['feed']['title']['\u0024t'];
+      // provinceKey = response.data['feed']['title']['\u0024t'];
 
-      print('provinceKey: $provinceKey');
+      print('provinceKey: ${currentConfig.provinceKey}');
 
       print('result=$list');
 

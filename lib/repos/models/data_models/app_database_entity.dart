@@ -1,4 +1,5 @@
 import 'package:floor/floor.dart';
+import 'package:travelspots/repos/models/data_models/relic_data_model.dart';
 import 'package:travelspots/utils/app_utils.dart';
 
 @entity
@@ -43,7 +44,7 @@ class SpotEntity {
     String provinceKey,
     String province,
   ) {
-    print('fromGoogleJson: $itemJson');
+    // print('fromGoogleJson: $itemJson');
     getOfKey(String key) {
       var val1 = itemJson['gsx\u0024$key'];
       if (val1 != null) {
@@ -90,6 +91,24 @@ class SpotEntity {
       website,
       imageLink,
       description,
+    );
+  }
+
+  factory SpotEntity.fromDatModel(SpotDataModel item) {
+    return SpotEntity(
+      item.id,
+      item.name,
+      item.popularity,
+      item.address,
+      item.province,
+      item.provinceKey,
+      item.district,
+      item.districtKey,
+      item.lat,
+      item.long,
+      item.website,
+      item.imageLink,
+      item.description,
     );
   }
 }
