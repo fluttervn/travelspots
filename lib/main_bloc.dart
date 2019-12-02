@@ -85,8 +85,12 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
     @required double longStart,
     @required double longEnd,
   }) async {
-    List<SpotEntity> items =
-        await spotDao.findSpotsInRegion(latStart, latEnd, longStart, longEnd);
+    List<SpotEntity> items = await spotDao.findSpotsInRegion(
+      latStart,
+      latEnd,
+      longStart,
+      longEnd,
+    );
     Fimber.d('There are ${items?.length} item whenfindSpotsInRegion');
     return items;
   }
@@ -108,7 +112,7 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
           tasks.add(appRepo.importGSheetData(
             province.spreadsheetId,
             province.worksheetId,
-            province.name,
+            province.provinceName,
           ));
         });
         List<List<SpotEntity>> data = await Future.wait(tasks);
@@ -117,8 +121,20 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
         List<SpotEntity> fullData = [];
         data.forEach((item) => fullData.addAll(item));
         print('Total SpotEntity is: ${fullData.length} items');
-        await appRepo.setTravelSpotList(fullData);
-        await appRepo.setProvinceMetaList(provinceMetaData.localIdTimeAll);
+
+        Map<String, int> localIdTimeAll = provinceMetaData.localIdTimeAll;
+        List<String> uniqueKeys = [];
+        outOfDateList.forEach((item) {
+          uniqueKeys.add(item.uniqueKey);
+        });
+
+        print('List of out-of-date uniqueKeys: $uniqueKeys');
+
+        await appRepo.updateTravelSpotList(
+          spotList: fullData,
+          uniqueKeys: uniqueKeys,
+        );
+        await appRepo.setProvinceMetaList(localIdTimeAll);
       }
     } on FltException catch (e) {
       print('checkUpdateData err: $e');

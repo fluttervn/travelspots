@@ -26,6 +26,13 @@ abstract class AppRepo {
   /// Save list of Spots into database
   Future setTravelSpotList(List<SpotEntity> items);
 
+  /// Update new Spot data to database, also clear all existing Spot data of
+  /// these provinces in database
+  Future updateTravelSpotList({
+    List<SpotEntity> spotList,
+    List<String> uniqueKeys,
+  });
+
   Future<bool> createTravelSpot({SpotDataModel data});
 
   Future<void> testQueryByGeolocation({

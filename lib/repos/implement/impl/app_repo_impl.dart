@@ -147,7 +147,7 @@ class AppRepoImpl extends AppRepo {
     print('localIdTime: $localIdTime');
 
     serverList.forEach((provinceMetaModel) {
-      String key = provinceMetaModel.worksheetId;
+      String key = provinceMetaModel.uniqueKey;
       var localLastUpdate = localIdTime == null ? 0 : localIdTime[key] ?? 0;
       print('check out of date: key=$key: localLastUpdate: $localLastUpdate, '
           'serverLastUpdate=${provinceMetaModel.lastUpdate}');
@@ -177,6 +177,15 @@ class AppRepoImpl extends AppRepo {
   @override
   Future setTravelSpotList(List<SpotEntity> items) async {
     await appDatabase.spotDao.insertDataFirstTime(items);
+    return null;
+  }
+
+  @override
+  Future updateTravelSpotList({
+    List<SpotEntity> spotList,
+    List<String> uniqueKeys,
+  }) async {
+    await appDatabase.spotDao.updateTravelSpotList(spotList, uniqueKeys);
     return null;
   }
 }

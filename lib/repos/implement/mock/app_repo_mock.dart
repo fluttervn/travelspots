@@ -65,4 +65,13 @@ class AppRepoMock extends AppRepo {
     // TODO: implement setTravelSpotList
     return null;
   }
+
+  @override
+  Future updateTravelSpotList({
+    List<SpotEntity> spotList,
+    List<String> uniqueKeys,
+  }) {
+    // TODO: implement updateTravelSpotList
+    return null;
+  }
 }
