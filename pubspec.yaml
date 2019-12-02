@@ -37,6 +37,7 @@ dependencies:
   location: ^2.3.5
   sliding_sheet: ^0.1.4
   shared_preferences: ^0.5.4+6
+  flutter_map_marker_cluster: ^0.2.5
 
 dev_dependencies:
   flutter_test:
