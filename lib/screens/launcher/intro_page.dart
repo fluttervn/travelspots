@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:travelspots/screens/launcher/map_page.dart';
+import 'package:travelspots/main.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 class IntroPage extends StatelessWidget {
   void _onNextPressed(BuildContext context) {
-    Navigation.openScreen(context: context, page: MapPage());
+    Navigation.openScreen(context: context, page: MyHomePage());
   }
 
   @override
