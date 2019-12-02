@@ -16,19 +16,19 @@ class LocalProvider {
     return _pref;
   }
 
-  Future<List> getAll() async {
+  Future<Map<String, int>> getAll() async {
     SharedPreferences prefs = await _getPref();
-    String valueStr = prefs.get(worksheetsKey);
-    List values = jsonDecode(valueStr);
-    print('decode: $values');
-    return values;
+    String values = prefs.get(worksheetsKey);
+    if (values == null || values.isEmpty) return null;
+    Map<String, int> map = Map.castFrom(json.decode(values));
+    return map;
   }
 
-  Future setAll(List input) async {
+  Future setAll(Map<String, int> input) async {
     SharedPreferences prefs = await _getPref();
-    String encodeStr = jsonEncode(input);
-    print('encode: $encodeStr');
-
-    prefs.setString(worksheetsKey, encodeStr);
+    String textMapIdTime = jsonEncode(input);
+    print('Pref setAll: input: $input');
+    print('Pref setAll: textMapIdTime: $textMapIdTime');
+    await prefs.setString(worksheetsKey, textMapIdTime);
   }
 }
