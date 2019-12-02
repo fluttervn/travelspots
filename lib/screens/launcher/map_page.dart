@@ -39,10 +39,16 @@ class MapPageState extends BaseState<MapPage> {
   bool _isMoveToCurrentGps = false;
 
   Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _initialCamera = CameraPosition(
+  /*CameraPosition _initialCamera = CameraPosition(
     target:
         LatLng(10.762622, 106.660172), // Ho Chi Minh City(10.762622,106.660172)
     zoom: 4,
+  );*/
+  static final double ZOOM = 16;
+  CameraPosition _initialCamera = CameraPosition(
+    target:
+        LatLng(10.762622, 106.660172), // Ho Chi Minh City(10.762622,106.660172)
+    zoom: ZOOM,
   );
 
   CameraPosition _currentCameraPosition;
@@ -104,9 +110,11 @@ class MapPageState extends BaseState<MapPage> {
 //        _onMarkerDragEnd(markerId, position);
 //      },
     );
-    setState(() {
+    markers[markerId] = marker;
+    _mapBloc.notifyMarkerAdded();
+    /*setState(() {
       markers[markerId] = marker;
-    });
+    });*/
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -125,7 +133,10 @@ class MapPageState extends BaseState<MapPage> {
         if (_permission) {
           location = await _locationService.getLocation();
           _currentCameraPosition = CameraPosition(
-              target: LatLng(location.latitude, location.longitude), zoom: 16);
+              target: LatLng(location.latitude, location.longitude),
+              zoom: ZOOM);
+          _initialCamera = _currentCameraPosition;
+          _mapBloc.notifyLocationFound();
           final GoogleMapController controller = await _controller.future;
           controller.animateCamera(
               CameraUpdate.newCameraPosition(_currentCameraPosition));
@@ -200,7 +211,7 @@ class MapPageState extends BaseState<MapPage> {
   void dispose() {
     super.dispose();
     Fimber.d('MapView:dispose');
-    _mapBloc.notifyMarkerUnTapped();
+    _mapBloc.resetMapPropeties();
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
     }
@@ -249,19 +260,43 @@ class MapPageState extends BaseState<MapPage> {
       ),
       body: Stack(
         children: <Widget>[
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            initialCameraPosition: _initialCamera,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              Fimber.d('init: MapView: onMapCreated');
+          PropertyChangeConsumer<MapBloc>(
+            properties: [
+              MapProperties.locationFound,
+              MapProperties.markerAdded
+            ],
+            builder: (context, bloc, property) {
+              Fimber.d('MapView display googlemap @property=$property');
+              if (property == null) {
+                return Container(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
+                  alignment: Alignment.center,
+                );
+              } else if (property == MapProperties.locationFound ||
+                  property == MapProperties.markerAdded) {
+                return GoogleMap(
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  initialCameraPosition: _initialCamera,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                    Fimber.d('init: MapView: onMapCreated');
+                  },
+                  onCameraMoveStarted: () {
+                    Fimber.d('MapView:onCameraMoveStarted');
+                  },
+                  onCameraIdle: () {
+                    Fimber.d('init: MapView: onCameraIdle');
+                    _onGetNearbyPoi();
+                  },
+                  markers: Set<Marker>.of(markers.values),
+                );
+              } else {
+                return Container();
+              }
             },
-            onCameraIdle: () {
-              Fimber.d('init: MapView: onCameraIdle');
-              _onGetNearbyPoi();
-            },
-            markers: Set<Marker>.of(markers.values),
           ),
           PropertyChangeConsumer<MapBloc>(
             properties: [
@@ -278,7 +313,7 @@ class MapPageState extends BaseState<MapPage> {
                 return Container();
               }
             },
-          )
+          ),
         ],
       ),
     );
