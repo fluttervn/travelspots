@@ -255,8 +255,10 @@ class MapPageState extends BaseState<MapPage> {
             initialCameraPosition: _initialCamera,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
+              Fimber.d('init: MapView: onMapCreated');
             },
             onCameraIdle: () {
+              Fimber.d('init: MapView: onCameraIdle');
               _onGetNearbyPoi();
             },
             markers: Set<Marker>.of(markers.values),
