@@ -149,6 +149,13 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
       }
 
       checkForUpdateStatus = CheckForUpdateProps.success;
+
+      if (currentLauncherStep == LauncherStepProps.checkForUpdate) {
+        // If user is in page CheckForUpdate, it means he is waiting for
+        // CFU successfully
+        print('Is in CheckForUpdate page, and update result is SUCCESS');
+        nextActionController.sink.add(LauncherStepProps.home);
+      }
     } on Exception catch (e) {
       checkForUpdateStatus = CheckForUpdateProps.failed;
       print('checkUpdateData err: $e');
