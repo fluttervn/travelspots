@@ -6,7 +6,7 @@ import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/screens/map/main_bloc.dart';
@@ -258,30 +258,16 @@ class MapPageState extends BaseState<MapPage> {
 
   ///Build bottom sheet
   Widget _buildBottomSheet() {
-    return SlidingSheet(
-      elevation: 8,
-//      cornerRadius: 16,
-      snapSpec: const SnapSpec(
-        // Enable snapping. This is true by default.
-        snap: true,
-        // Set custom snapping points.
-        snappings: [0.4, 0.7, 1.0],
-        // Define to what the snappings relate to. In this case,
-        // the total available space that the sheet can expand to.
-        positioning: SnapPositioning.pixelOffset,
+    return SlidingUpPanel(
+      panel: Container(
+        child: Text(
+          '${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'
+          '\nUniqueKey: ${_selectedSpotEntity.uniqueKey}',
+          style: TextStyle(fontSize: 16),
+        ),
+        padding: EdgeInsets.all(16),
       ),
-      builder: (context, state) {
-        // This is the content of the sheet that will get
-        // scrolled, if the content is bigger than the available
-        // height of the sheet.
-        return Container(
-          height: MediaQuery.of(context).size.height - _appbarHeight,
-          child:
-              Text('${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'
-                  '\nUniqueKey: ${_selectedSpotEntity.uniqueKey}'),
-          padding: EdgeInsets.all(16),
-        );
-      },
+      maxHeight: MediaQuery.of(context).size.height - _appbarHeight,
     );
   }
 
