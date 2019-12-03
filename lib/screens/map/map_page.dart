@@ -230,7 +230,7 @@ class MapPageState extends BaseState<MapPage> {
         longStart: newRegion[2],
         longEnd: newRegion[3],
       );
-      if (_listSpotEntity != null && _listSpotEntity.length < 100) {
+      if (_listSpotEntity != null && _listSpotEntity.length > 0) {
         for (var i = 0; i < _listSpotEntity.length; i++) {
           SpotEntity spotEntity = _listSpotEntity[i];
           _addMarker(i + 1, spotEntity);
@@ -268,7 +268,7 @@ class MapPageState extends BaseState<MapPage> {
         snappings: [0.4, 0.7, 1.0],
         // Define to what the snappings relate to. In this case,
         // the total available space that the sheet can expand to.
-        positioning: SnapPositioning.relativeToAvailableSpace,
+        positioning: SnapPositioning.pixelOffset,
       ),
       builder: (context, state) {
         // This is the content of the sheet that will get
