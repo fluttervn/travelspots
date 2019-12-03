@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `website` TEXT, `imageLink` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `locationLink` TEXT, `website` TEXT, `imageLink` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -110,6 +110,7 @@ class _$SpotDao extends SpotDao {
                   'districtKey': item.districtKey,
                   'lat': item.lat,
                   'long': item.long,
+                  'locationLink': item.locationLink,
                   'website': item.website,
                   'imageLink': item.imageLink,
                   'description': item.description
@@ -132,6 +133,7 @@ class _$SpotDao extends SpotDao {
       row['districtKey'] as String,
       row['lat'] as double,
       row['long'] as double,
+      row['locationLink'] as String,
       row['website'] as String,
       row['imageLink'] as String,
       row['description'] as String);
