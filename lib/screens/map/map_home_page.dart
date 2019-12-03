@@ -6,12 +6,12 @@ import 'package:travelspots/common/base_bloc.dart';
 import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/common/demo_search_page.dart';
 import 'package:travelspots/repos/models/ui_models/spot_ui_model.dart';
-import 'package:travelspots/screens/launcher/map_page.dart';
 import 'package:travelspots/singleton/config.dart';
 import 'package:travelspots/utils/csv_utils.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 import 'main_bloc.dart';
+import 'map_page.dart';
 
 class MapHomePage extends StatefulWidget {
   @override
