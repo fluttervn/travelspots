@@ -5,7 +5,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/screens/launcher/launcher_bloc.dart';
 import 'package:travelspots/screens/launcher/launcher_page.dart';
-import 'package:travelspots/screens/launcher/map_bloc.dart';
+import 'package:travelspots/screens/map/map_bloc.dart';
 
 import 'screens/map/main_bloc.dart';
 import 'singleton/config.dart';
