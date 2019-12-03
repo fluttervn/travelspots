@@ -8,9 +8,9 @@ import 'package:location/location.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:travelspots/common/base_state.dart';
-import 'package:travelspots/main_bloc.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/screens/launcher/map_bloc.dart';
+import 'package:travelspots/screens/map/main_bloc.dart';
 import 'package:travelspots/utils/app_utils.dart';
 
 /// A class displays map UI

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/base_state.dart';
-import 'package:travelspots/main.dart';
+import 'package:travelspots/screens/map/map_home_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
+import 'intro_page.dart';
 import 'launcher_bloc.dart';
+import 'update_page.dart';
 
 /// A class displays UI for Launcher screen
 class LauncherPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class LauncherPageState extends BaseState<LauncherPage> {
       if (launcherStepProps == LauncherStepProps.home) {
         Navigation.openScreen(
           context: context,
-          page: MyHomePage(),
+          page: MapHomePage(),
           replaceScreen: true,
         );
       }
@@ -61,31 +63,19 @@ class LauncherPageState extends BaseState<LauncherPage> {
             if (property == null || property == LauncherStepProps.splash) {
               return _SplashPage();
             } else if (property == LauncherStepProps.intro) {
-              return _IntroPage(
+              return IntroPage(
                 onNext: () {
                   _launcherBloc.onButtonNextOfIntroPress();
                 },
               );
             } else if (property == LauncherStepProps.checkForUpdate) {
-              return _CheckForUpdatePage();
+              return CheckForUpdatePage();
             } else {
               return Container();
             }
           },
         ),
       ),
-    );
-  }
-}
-
-class _CheckForUpdatePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Check for update'),
-      ),
-      color: Colors.white,
     );
   }
 }
@@ -100,41 +90,6 @@ class _SplashPage extends StatelessWidget {
       ),
       alignment: Alignment.center,
       color: Colors.white,
-    );
-  }
-}
-
-class _IntroPage extends StatelessWidget {
-  final VoidCallback onNext;
-
-  const _IntroPage({Key key, this.onNext}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: Text('Author by FlutterVN'),
-              alignment: Alignment.bottomLeft,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              child: RaisedButton(
-                child: Text(
-                  'Next',
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: onNext,
-              ),
-              alignment: Alignment.bottomRight,
-            ),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
     );
   }
 }
