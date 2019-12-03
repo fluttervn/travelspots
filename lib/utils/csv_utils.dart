@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
-import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 
 import 'app_utils.dart';
 
@@ -85,37 +83,37 @@ class CSVUtils {
     return listSpotEntity;
   }
 
-  static importJsonDataToFirestore() async {
-    //Get json from google
-    var listData = await _getJsonData();
-    var batch;
-
-    //Delete all data before importing
-    batch = Firestore.instance.batch();
-    var snapshot = await Firestore.instance
-        .collection('spots')
-        .where('province_key', isEqualTo: currentConfig.provinceKey)
-        .getDocuments();
-    for (DocumentSnapshot document in snapshot.documents) {
-      batch.delete(document.reference);
-    }
-    await batch.commit();
-
-    //Convert json to Firebase json and import to Firestore
-    batch = Firestore.instance.batch();
-    for (var itemJson in listData) {
-      var item = SpotDataModel.fromGoogleJson(
-        itemJson,
-        currentConfig.provinceKey,
-        currentConfig.province,
-      );
-
-      batch.setData(
-          Firestore.instance.collection('spots').document(), item.toJsonData());
-    }
-
-    batch.commit();
-  }
+//  static importJsonDataToFirestore() async {
+//    //Get json from google
+//    var listData = await _getJsonData();
+//    var batch;
+//
+//    //Delete all data before importing
+//    batch = Firestore.instance.batch();
+//    var snapshot = await Firestore.instance
+//        .collection('spots')
+//        .where('province_key', isEqualTo: currentConfig.provinceKey)
+//        .getDocuments();
+//    for (DocumentSnapshot document in snapshot.documents) {
+//      batch.delete(document.reference);
+//    }
+//    await batch.commit();
+//
+//    //Convert json to Firebase json and import to Firestore
+//    batch = Firestore.instance.batch();
+//    for (var itemJson in listData) {
+//      var item = SpotDataModel.fromGoogleJson(
+//        itemJson,
+//        currentConfig.provinceKey,
+//        currentConfig.province,
+//      );
+//
+//      batch.setData(
+//          Firestore.instance.collection('spots').document(), item.toJsonData());
+//    }
+//
+//    batch.commit();
+//  }
 
   static Future<List> _getJsonData() async {
     final Dio dio = Dio();

@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fimber/fimber.dart';
 import 'package:travelspots/repos/models/ui_models/spot_ui_model.dart';
 
 /// RelicData Model
@@ -34,6 +32,9 @@ class SpotDataModel {
   /// Long
   double long;
 
+  /// Location Link
+  String locationLink;
+
   /// Description
   String description;
 
@@ -54,6 +55,7 @@ class SpotDataModel {
     this.province,
     this.lat,
     this.long,
+    this.locationLink,
     this.description,
     this.website,
     this.imageLink,
@@ -61,39 +63,39 @@ class SpotDataModel {
 
   /// Constructor RelicData Model
 
-  factory SpotDataModel.fromDocument(DocumentSnapshot document) {
-    Fimber.d('document data: ${document.data}');
-    return SpotDataModel(
-      id: document.documentID as int,
-      name: document['name'],
-      popularity: document['popularity'],
-      address: document['address'],
-      district: document['district'],
-      districtKey: document['district_key'],
-      lat: document['lat'],
-      long: document['long'],
-      description: document['description'],
-      website: document['website'],
-      imageLink: document['image_link'],
-    );
-  }
+//  factory SpotDataModel.fromDocument(DocumentSnapshot document) {
+//    Fimber.d('document data: ${document.data}');
+//    return SpotDataModel(
+//      id: document.documentID as int,
+//      name: document['name'],
+//      popularity: document['popularity'],
+//      address: document['address'],
+//      district: document['district'],
+//      districtKey: document['district_key'],
+//      lat: document['lat'],
+//      long: document['long'],
+//      description: document['description'],
+//      website: document['website'],
+//      imageLink: document['image_link'],
+//    );
+//  }
 
-  Map<String, dynamic> toJsonData() {
-    return {
-      'name': name,
-      'uniqueKey': uniqueKey,
-      'popularity': popularity,
-      'address': address,
-      'district': district,
-      'district_key': districtKey,
-      'province': province,
-      'lat': lat,
-      'long': long,
-      'description': description,
-      'website': website,
-      'image_link': imageLink,
-    };
-  }
+//  Map<String, dynamic> toJsonData() {
+//    return {
+//      'name': name,
+//      'uniqueKey': uniqueKey,
+//      'popularity': popularity,
+//      'address': address,
+//      'district': district,
+//      'district_key': districtKey,
+//      'province': province,
+//      'lat': lat,
+//      'long': long,
+//      'description': description,
+//      'website': website,
+//      'image_link': imageLink,
+//    };
+//  }
 
   factory SpotDataModel.fromUI(SpotUIModel model) {
     return SpotDataModel(
@@ -116,6 +118,7 @@ class SpotDataModel {
     var districtKey = itemJson['gsx\u0024districtkey']['\u0024t'];
     var lat = itemJson['gsx\u0024lat']['\u0024t'];
     var long = itemJson['gsx\u0024long']['\u0024t'];
+    var locationLink = itemJson['gsx\u0024locationlink']['\u0024t'];
     var description = itemJson['gsx\u0024description']['\u0024t'];
     var website = itemJson['gsx\u0024website']['\u0024t'];
     var imageLink = itemJson['gsx\u0024imagelink']['\u0024t'];
@@ -127,6 +130,7 @@ class SpotDataModel {
     print('districtKey is: $districtKey');
     print('lat is: $lat');
     print('long is: $long');
+    print('locationLink is: $locationLink');
     print('description is: $description');
     print('website is: $website');
     print('imageLink is: $imageLink');
@@ -142,6 +146,7 @@ class SpotDataModel {
       districtKey: districtKey,
       lat: double.parse(lat == '' ? '10.7771437' : lat),
       long: double.parse(long == '' ? '106.6954479' : long),
+      locationLink: locationLink,
       description: description,
       website: website,
       imageLink: imageLink,

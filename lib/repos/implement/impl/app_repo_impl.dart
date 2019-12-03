@@ -8,7 +8,6 @@ import 'package:travelspots/repos/isolate_tasks/get_gsheet_task.dart';
 import 'package:travelspots/repos/local/local_provider.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
-import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 import 'package:travelspots/repos/remote/remote_provider.dart';
 
 import '../../app_repo.dart';
@@ -38,33 +37,33 @@ class AppRepoImpl extends AppRepo {
     this.worker,
   });
 
-  @override
-  Future<List<SpotDataModel>> getTravelSpotList() async {
-    final QuerySnapshot result = await Firestore.instance
-        .collection('spots')
-        .where('district_key', isEqualTo: 'quan_1')
-        .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
-    Fimber.d('document: $documents');
+//  @override
+//  Future<List<SpotDataModel>> getTravelSpotList() async {
+//    final QuerySnapshot result = await Firestore.instance
+//        .collection('spots')
+//        .where('district_key', isEqualTo: 'quan_1')
+//        .getDocuments();
+//    final List<DocumentSnapshot> documents = result.documents;
+//    Fimber.d('document: $documents');
+//
+//    return documents
+//        .map((document) => SpotDataModel.fromDocument(document))
+//        .toList();
+//  }
 
-    return documents
-        .map((document) => SpotDataModel.fromDocument(document))
-        .toList();
-  }
-
-  @override
-  Future<bool> createTravelSpot({SpotDataModel data}) async {
-    try {
-      await Firestore.instance
-          .collection('relics')
-          .document()
-          .setData(data.toJsonData());
-      return true;
-    } catch (e) {
-      Fimber.d('createRelic error: $e');
-      return false;
-    }
-  }
+//  @override
+//  Future<bool> createTravelSpot({SpotDataModel data}) async {
+//    try {
+//      await Firestore.instance
+//          .collection('relics')
+//          .document()
+//          .setData(data.toJsonData());
+//      return true;
+//    } catch (e) {
+//      Fimber.d('createRelic error: $e');
+//      return false;
+//    }
+//  }
 
   @override
   Future<void> testQueryByGeolocation({

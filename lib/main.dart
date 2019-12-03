@@ -14,7 +14,6 @@ import 'common/base_state.dart';
 import 'main_bloc.dart';
 import 'repos/models/ui_models/spot_ui_model.dart';
 import 'singleton/config.dart';
-import 'utils/csv_utils.dart';
 
 void main() async {
   Fimber.plantTree(FimberTree());
@@ -83,10 +82,10 @@ class _MyHomePageState extends BaseState<MyHomePage> {
             icon: Icon(Icons.update),
             onPressed: _checkUpdate,
           ),
-          IconButton(
-            icon: Icon(Icons.import_export),
-            onPressed: _loadCSV,
-          )
+//          IconButton(
+//            icon: Icon(Icons.import_export),
+//            onPressed: _loadCSV,
+//          )
         ],
       ),
       body: Center(
@@ -190,6 +189,6 @@ class _MyHomePageState extends BaseState<MyHomePage> {
   }
 
   void _loadCSV() async {
-    CSVUtils.importJsonDataToFirestore();
+//    CSVUtils.importJsonDataToFirestore();
   }
 }

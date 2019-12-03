@@ -10,7 +10,6 @@ import 'package:travelspots/utils/csv_utils.dart';
 import 'common/base_bloc.dart';
 import 'repos/app_repo.dart';
 import 'repos/flt_exception.dart';
-import 'repos/models/data_models/spot_data_model.dart';
 import 'repos/models/ui_models/spot_ui_model.dart';
 
 /// Business Logic related to Login feature
@@ -60,23 +59,23 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
     }
   }
 
-  /// Method to call creating Relic
-  Future<bool> createTravelSpot(SpotUIModel model) async {
-    try {
-      notifyListeners(BaseBlocProperties.loading);
-      bool result =
-          await appRepo.createTravelSpot(data: SpotDataModel.fromUI(model));
-
-      Fimber.d('result: $result');
-
-      notifyListeners(BaseBlocProperties.serverSuccess);
-      return result;
-    } on FltException catch (e) {
-      errorMessage = e.localizeMessage;
-      notifyListeners(BaseBlocProperties.serverError);
-      rethrow;
-    }
-  }
+//  /// Method to call creating Relic
+//  Future<bool> createTravelSpot(SpotUIModel model) async {
+//    try {
+//      notifyListeners(BaseBlocProperties.loading);
+//      bool result =
+//          await appRepo.createTravelSpot(data: SpotDataModel.fromUI(model));
+//
+//      Fimber.d('result: $result');
+//
+//      notifyListeners(BaseBlocProperties.serverSuccess);
+//      return result;
+//    } on FltException catch (e) {
+//      errorMessage = e.localizeMessage;
+//      notifyListeners(BaseBlocProperties.serverError);
+//      rethrow;
+//    }
+//  }
 
   /// Method to test Firestore query
   Future<List<SpotEntity>> findSpotsInRegion({

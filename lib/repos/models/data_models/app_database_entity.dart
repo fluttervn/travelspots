@@ -15,6 +15,7 @@ class SpotEntity {
   final String districtKey;
   final double lat;
   final double long;
+  final String locationLink;
   final String website;
   final String imageLink;
   final String description;
@@ -33,6 +34,7 @@ class SpotEntity {
     this.districtKey,
     this.lat,
     this.long,
+    this.locationLink,
     this.website,
     this.imageLink,
     this.description,
@@ -61,6 +63,7 @@ class SpotEntity {
     var districtKey = getOfKey('districtkey');
     var lat = getOfKey('lat');
     var long = getOfKey('long');
+    var locationLink = getOfKey('locationlink');
     var description = getOfKey('description');
     var website = getOfKey('website');
     var imageLink = getOfKey('imagelink');
@@ -88,6 +91,7 @@ class SpotEntity {
       districtKey,
       AppUtils.parseDouble(lat, 10.7771437),
       AppUtils.parseDouble(long, 106.6954479),
+      locationLink,
       website,
       imageLink,
       description,
@@ -106,6 +110,7 @@ class SpotEntity {
       item.districtKey,
       item.lat,
       item.long,
+      item.locationLink,
       item.website,
       item.imageLink,
       item.description,

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:travelspots/repos/models/data_models/province_meta_model.dart';
 
 import 'models/data_models/app_database_entity.dart';
-import 'models/data_models/spot_data_model.dart';
 
 /// Interface to call data related to common data of application.
 /// This is only abstract class, you must implement method inside this class.
@@ -20,8 +19,8 @@ abstract class AppRepo {
   /// Update province meta data
   Future setProvinceMetaList(Map<String, int> localIdTimeAll);
 
-  /// Method to call getting Relics
-  Future<List<SpotDataModel>> getTravelSpotList();
+//  /// Method to call getting Relics
+//  Future<List<SpotDataModel>> getTravelSpotList();
 
   /// Save list of Spots into database
   Future setTravelSpotList(List<SpotEntity> items);
@@ -33,7 +32,7 @@ abstract class AppRepo {
     List<String> uniqueKeys,
   });
 
-  Future<bool> createTravelSpot({SpotDataModel data});
+//  Future<bool> createTravelSpot({SpotDataModel data});
 
   Future<void> testQueryByGeolocation({
     @required double latStart,
