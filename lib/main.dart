@@ -4,9 +4,10 @@ import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/demo_search_page.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
+import 'package:travelspots/screens/launcher/launcher_bloc.dart';
+import 'package:travelspots/screens/launcher/launcher_page.dart';
 import 'package:travelspots/screens/launcher/map_bloc.dart';
 import 'package:travelspots/screens/launcher/map_page.dart';
-import 'package:travelspots/screens/launcher/splash_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 import 'common/base_bloc.dart';
@@ -24,6 +25,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final LauncherBloc _launcherBloc = LauncherBloc(
+    appRepo: Config.shared.getAppRepo(),
+    spotDao: Config.shared.appDatabase.spotDao,
+    localProvider: Config.localProvider,
+  );
   final MainBloc _mainBloc = MainBloc(
     appRepo: Config.shared.getAppRepo(),
     spotDao: Config.shared.appDatabase.spotDao,
@@ -39,9 +45,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashPage(),
+      home: LauncherPage(),
     );
 
+    tree = PropertyChangeProvider(value: _launcherBloc, child: tree);
     tree = PropertyChangeProvider(value: _mainBloc, child: tree);
     tree = PropertyChangeProvider(value: _mapBloc, child: tree);
     return tree;
@@ -62,6 +69,11 @@ class _MyHomePageState extends BaseState<MyHomePage> {
   void initState() {
     super.initState();
     _mainBloc = providerOfBloc();
+  }
+
+  void _clearFirstTimeLauncherSetting() async {
+    print('Reset FirstTimeLauncher to default');
+    Config.localProvider.setFirstTimeLauncher(true);
   }
 
   void _getTravelSpots() async {
@@ -179,9 +191,9 @@ class _MyHomePageState extends BaseState<MyHomePage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               heroTag: 'tag1',
-              onPressed: _getTravelSpots,
-              tooltip: 'Download all Travel Spots data',
-              child: Icon(Icons.file_download),
+              onPressed: _clearFirstTimeLauncherSetting,
+              tooltip: 'Clear FirstLaunchTime',
+              child: Icon(Icons.remove_shopping_cart),
             ),
           ),
         ],
