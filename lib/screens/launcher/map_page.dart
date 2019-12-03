@@ -37,10 +37,12 @@ class MapPageState extends BaseState<MapPage> {
   bool _permission = false;
   String _error;
   bool _isMoveToCurrentGps = false;
+  bool _isMarkerTapped = false;
   MarkerId selectedMarker;
   int _startTime;
   int _endTime;
   BitmapDescriptor _markerIcon;
+  double _appbarHeight;
 
   Completer<GoogleMapController> _controller = Completer();
   /*CameraPosition _initialCamera = CameraPosition(
@@ -91,6 +93,7 @@ class MapPageState extends BaseState<MapPage> {
       );
       _markers[markerId] = newMarker;
     }*/
+    _isMarkerTapped = true;
     _mapBloc.notifyMarkerTapped();
   }
 
@@ -213,28 +216,32 @@ class MapPageState extends BaseState<MapPage> {
   }
 
   void _onGetNearbyPoi() async {
-    Fimber.d('MapView: get nearby POI');
-    final GoogleMapController controller = await _controller.future;
-    LatLngBounds visibleRegion = await controller.getVisibleRegion();
-    Fimber.d('new regionBound=$visibleRegion');
-    List newRegion = AppUtils.calculateMapRegion(visibleRegion);
-    Fimber.d('new extra region =$newRegion');
+    if (!_isMarkerTapped) {
+      Fimber.d('MapView: get nearby POI');
+      final GoogleMapController controller = await _controller.future;
+      LatLngBounds visibleRegion = await controller.getVisibleRegion();
+      Fimber.d('new regionBound=$visibleRegion');
+      List newRegion = AppUtils.calculateMapRegion(visibleRegion);
+      Fimber.d('new extra region =$newRegion');
 
-    _listSpotEntity = await _mainBloc.findSpotsInRegion(
-      latStart: newRegion[0],
-      latEnd: newRegion[1],
-      longStart: newRegion[2],
-      longEnd: newRegion[3],
-    );
-    if (_listSpotEntity != null && _listSpotEntity.length < 100) {
-      for (var i = 0; i < _listSpotEntity.length; i++) {
-        SpotEntity spotEntity = _listSpotEntity[i];
-        _addMarker(i + 1, spotEntity);
+      _listSpotEntity = await _mainBloc.findSpotsInRegion(
+        latStart: newRegion[0],
+        latEnd: newRegion[1],
+        longStart: newRegion[2],
+        longEnd: newRegion[3],
+      );
+      if (_listSpotEntity != null && _listSpotEntity.length < 100) {
+        for (var i = 0; i < _listSpotEntity.length; i++) {
+          SpotEntity spotEntity = _listSpotEntity[i];
+          _addMarker(i + 1, spotEntity);
+        }
+        /*_mapBloc.notifyMarkerAdded();*/
+        //setState to update marker
+        setState(() {});
+//        _isMoveToCurrentGps = false;
       }
-      /*_mapBloc.notifyMarkerAdded();*/
-      //setState to update marker
-      setState(() {});
-      _isMoveToCurrentGps = false;
+    } else {
+      _isMarkerTapped = false;
     }
   }
 
@@ -268,7 +275,7 @@ class MapPageState extends BaseState<MapPage> {
         // scrolled, if the content is bigger than the available
         // height of the sheet.
         return Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - _appbarHeight,
           child:
               Text('${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'
                   '\nUniqueKey: ${_selectedSpotEntity.uniqueKey}'),
@@ -276,6 +283,11 @@ class MapPageState extends BaseState<MapPage> {
         );
       },
     );
+  }
+
+  void _onMapTap(LatLng latLng) {
+    Fimber.d('MapView:onTap');
+    _mapBloc.notifyMarkerUnTapped();
   }
 
   Widget _buildGoogleMap() {
@@ -290,6 +302,9 @@ class MapPageState extends BaseState<MapPage> {
       onCameraMoveStarted: () {
         Fimber.d('MapView:onCameraMoveStarted');
       },
+      onTap: (latlng) {
+        _onMapTap(latlng);
+      },
       onCameraIdle: () {
         Fimber.d('init: MapView: onCameraIdle');
         _onGetNearbyPoi();
@@ -301,19 +316,21 @@ class MapPageState extends BaseState<MapPage> {
   @override
   Widget buildChild(BuildContext context) {
     Fimber.d('MapView:buildChild');
+    AppBar appbar = AppBar(
+      title: Text('Map'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: _onGetNearbyPoi,
+        )
+      ],
+    );
+    _appbarHeight = appbar.preferredSize.height + 16;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Map'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _onGetNearbyPoi,
-          )
-        ],
-      ),
+      appBar: appbar,
       body: Stack(
         children: <Widget>[
-          PropertyChangeConsumer<MapBloc>(
+          /*PropertyChangeConsumer<MapBloc>(
             properties: [
 //              MapProperties.locationFound,
 //              MapProperties.markerAdded
@@ -324,24 +341,8 @@ class MapPageState extends BaseState<MapPage> {
 
               return _buildGoogleMap();
             },
-          ),
-          /*GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            initialCameraPosition: _initialCamera,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              Fimber.d('init: MapView: onMapCreated');
-            },
-            onCameraMoveStarted: () {
-              Fimber.d('MapView:onCameraMoveStarted');
-            },
-            onCameraIdle: () {
-              Fimber.d('init: MapView: onCameraIdle');
-              _onGetNearbyPoi();
-            },
-            markers: Set<Marker>.of(_markers.values),
           ),*/
+          _buildGoogleMap(),
           PropertyChangeConsumer<MapBloc>(
             properties: [
               MapProperties.markerTapped,
