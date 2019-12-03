@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:travelspots/common/base_bloc.dart';
+import 'package:travelspots/repos/app_repo.dart';
+import 'package:travelspots/repos/flt_exception.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/repos/models/ui_models/spot_ui_model.dart';
 import 'package:travelspots/utils/csv_utils.dart';
-
-import 'common/base_bloc.dart';
-import 'repos/app_repo.dart';
-import 'repos/flt_exception.dart';
-import 'repos/models/ui_models/spot_ui_model.dart';
 
 /// Business Logic related to Login feature
 class MainBloc extends BaseBloc<BaseBlocProperties> {

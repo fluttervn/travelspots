@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final String worksheetsKey = 'worksheets';
+final String firstLaunchTimeKey = 'firstLaunchTime';
 
 /// A class help handle local data
 class LocalProvider {
@@ -30,5 +31,16 @@ class LocalProvider {
     print('Pref setAll: input: $input');
     print('Pref setAll: textMapIdTime: $textMapIdTime');
     await prefs.setString(worksheetsKey, textMapIdTime);
+  }
+
+  Future<bool> isFirstTimeLauncher() async {
+    SharedPreferences prefs = await _getPref();
+    bool isFirstTime = prefs.getBool(firstLaunchTimeKey);
+    return isFirstTime == true;
+  }
+
+  Future setFirstTimeLauncher(bool isFistTime) async {
+    SharedPreferences prefs = await _getPref();
+    await prefs.setBool(firstLaunchTimeKey, isFistTime);
   }
 }

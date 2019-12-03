@@ -43,6 +43,11 @@ class BaseBloc<T extends Object> extends PropertyChangeNotifier<T> {
     forceCancel = false;
     return null;
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
 
 /// Creating base bloc to manage all bloc

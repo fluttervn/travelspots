@@ -26,7 +26,7 @@ enum Flavor {
 /// A class help getting actual repository
 class Config {
   static RemoteProvider _remoteProvider = RemoteProvider();
-  static LocalProvider _localProvider = LocalProvider();
+  static LocalProvider localProvider = LocalProvider();
   static Worker _worker = Worker(poolSize: 3);
 
   static Config _singleton;
@@ -47,7 +47,7 @@ class Config {
     if (_appRepo == null) {
       _appRepo = AppRepoImpl(
         remoteProvider: _remoteProvider,
-        localProvider: _localProvider,
+        localProvider: localProvider,
         appDatabase: appDatabase,
         worker: _worker,
       );

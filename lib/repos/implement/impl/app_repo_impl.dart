@@ -155,9 +155,6 @@ class AppRepoImpl extends AppRepo {
       }
       localIdTimeAll[key] = provinceMetaModel.lastUpdate;
     });
-    if (outOfDateList.isNotEmpty) {
-      localProvider.setAll(localIdTimeAll);
-    }
 
     ProvinceMetaData provinceMetaData = ProvinceMetaData(
       serverList: serverList,
