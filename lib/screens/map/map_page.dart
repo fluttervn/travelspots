@@ -76,17 +76,8 @@ class MapPageState extends BaseState<MapPage> {
 
   void _onMarkerTapped(SpotEntity spotEntity, MarkerId markerId) {
     _selectedSpotEntity = spotEntity;
-    selectedMarker = markerId;
-    /*final Marker tappedMarker = _markers[markerId];
-    final Marker newMarker = tappedMarker.copyWith(
-      */ /*iconParam: BitmapDescriptor.defaultMarkerWithHue(
-        BitmapDescriptor.hueGreen,
-      ),*/ /*
-      iconParam: _markerIcon,
-    );
-    _markers[markerId] = newMarker;*/
-
-    /*if (tappedMarker != null) {
+    final Marker tappedMarker = _markers[markerId];
+    if (tappedMarker != null) {
       if (_markers.containsKey(selectedMarker)) {
         final Marker resetOld = _markers[selectedMarker]
             .copyWith(iconParam: BitmapDescriptor.defaultMarker);
@@ -100,7 +91,7 @@ class MapPageState extends BaseState<MapPage> {
 //        iconParam: _markerIcon,
       );
       _markers[markerId] = newMarker;
-    }*/
+    }
     _isMarkerTapped = true;
     _mapBloc.notifyMarkerTapped();
   }
