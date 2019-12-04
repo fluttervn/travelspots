@@ -38,7 +38,7 @@ class MapPageState extends BaseState<MapPage> {
   String _error;
   bool _isMoveToCurrentGps = false;
   bool _isMarkerTapped = false;
-  MarkerId selectedMarker;
+  MarkerId _selectedMarkerId;
   int _startTime;
   int _endTime;
   double _appbarHeight;
@@ -72,12 +72,12 @@ class MapPageState extends BaseState<MapPage> {
     _selectedSpotEntity = spotEntity;
     final Marker tappedMarker = _markers[markerId];
     if (tappedMarker != null) {
-      if (_markers.containsKey(selectedMarker)) {
-        final Marker resetOld = _markers[selectedMarker]
+      if (_markers.containsKey(_selectedMarkerId)) {
+        final Marker resetOld = _markers[_selectedMarkerId]
             .copyWith(iconParam: BitmapDescriptor.defaultMarker);
-        _markers[selectedMarker] = resetOld;
+        _markers[_selectedMarkerId] = resetOld;
       }
-      selectedMarker = markerId;
+      _selectedMarkerId = markerId;
       final Marker newMarker = tappedMarker.copyWith(
         iconParam: BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueGreen,
@@ -123,18 +123,23 @@ class MapPageState extends BaseState<MapPage> {
         'MapPage _addMarker @index=$index, @title=${spotEntity.name}');*/
     final String markerIdVal = 'marker_id_${spotEntity.id}';
     final MarkerId markerId = MarkerId(markerIdVal);
-
+    BitmapDescriptor bitmapDescriptor = BitmapDescriptor.defaultMarker;
+    if (markerId == _selectedMarkerId) {
+      bitmapDescriptor = BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueGreen,
+      );
+    }
     final Marker marker = Marker(
-      markerId: markerId,
-      position: LatLng(spotEntity.lat, spotEntity.long),
+        markerId: markerId,
+        position: LatLng(spotEntity.lat, spotEntity.long),
 //      infoWindow: InfoWindow(title: title, snippet: description),
-      onTap: () {
-        _onMarkerTapped(spotEntity, markerId);
-      },
+        onTap: () {
+          _onMarkerTapped(spotEntity, markerId);
+        },
 //      onDragEnd: (LatLng position) {
 //        _onMarkerDragEnd(markerId, position);
 //      },
-    );
+        icon: bitmapDescriptor);
     _markers[markerId] = marker;
   }
 
