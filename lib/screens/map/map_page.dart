@@ -41,7 +41,6 @@ class MapPageState extends BaseState<MapPage> {
   MarkerId selectedMarker;
   int _startTime;
   int _endTime;
-  BitmapDescriptor _markerIcon;
   double _appbarHeight;
 
   Completer<GoogleMapController> _controller = Completer();
@@ -66,11 +65,6 @@ class MapPageState extends BaseState<MapPage> {
     _mainBloc = providerOfBloc();
     _startTime = DateTime.now().millisecond;
     Fimber.d('MapView initState with @startTime=$_startTime');
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(48, 48)),
-            'assets/images/flutter_vn_logo.jpg')
-        .then((onValue) {
-      _markerIcon = onValue;
-    });
     initPlatformState();
   }
 

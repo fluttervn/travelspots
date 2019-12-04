@@ -110,10 +110,19 @@ class RemoteProvider {
           values: [spreadSheetId, workSheetId]),
       convertToModel: (response) {
         List jsonList = response.data['feed']['entry'];
-        return jsonList
+        List<SpotEntity> listSpotEntity = [];
+        for (var itemJson in jsonList) {
+          SpotEntity spotEntity = SpotEntity.fromGoogleJson(
+              itemJson, '$spreadSheetId-$workSheetId', provinceName);
+          if (spotEntity.lat != null && spotEntity.long != null) {
+            listSpotEntity.add(spotEntity);
+          }
+        }
+        /*return jsonList
             .map((itemJson) => SpotEntity.fromGoogleJson(
                 itemJson, '$spreadSheetId-$workSheetId', provinceName))
-            .toList();
+            .toList();*/
+        return listSpotEntity;
       },
     );
   }
