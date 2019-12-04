@@ -125,9 +125,9 @@ class MapPageState extends BaseState<MapPage> {
   }
 
   void _addMarker(int index, SpotEntity spotEntity) {
-//    Fimber.d(
-//        'MapPage _addMarker @title=${spotEntity.name}, @description=${spotEntity.description}');
-    final String markerIdVal = 'marker_id_$index';
+    /*Fimber.d(
+        'MapPage _addMarker @index=$index, @title=${spotEntity.name}');*/
+    final String markerIdVal = 'marker_id_${spotEntity.id}';
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
