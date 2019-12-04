@@ -36,7 +36,7 @@ class LocalProvider {
   Future<bool> isFirstTimeLauncher() async {
     SharedPreferences prefs = await _getPref();
     bool isFirstTime = prefs.getBool(firstLaunchTimeKey);
-    return isFirstTime == true;
+    return isFirstTime == true || isFirstTime == null;
   }
 
   Future setFirstTimeLauncher(bool isFistTime) async {
