@@ -76,7 +76,15 @@ class MapPageState extends BaseState<MapPage> {
 
   void _onMarkerTapped(SpotEntity spotEntity, MarkerId markerId) {
     _selectedSpotEntity = spotEntity;
-    final Marker tappedMarker = _markers[markerId];
+    selectedMarker = markerId;
+    /*final Marker tappedMarker = _markers[markerId];
+    final Marker newMarker = tappedMarker.copyWith(
+      */ /*iconParam: BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueGreen,
+      ),*/ /*
+      iconParam: _markerIcon,
+    );
+    _markers[markerId] = newMarker;*/
 
     /*if (tappedMarker != null) {
       if (_markers.containsKey(selectedMarker)) {
@@ -143,10 +151,6 @@ class MapPageState extends BaseState<MapPage> {
 //      },
     );
     _markers[markerId] = marker;
-//    _mapBloc.notifyMarkerAdded();
-    /*setState(() {
-      markers[markerId] = marker;
-    });*/
   }
 
   /// Platform messages are asynchronous, so we initialize in an async method.
@@ -235,9 +239,7 @@ class MapPageState extends BaseState<MapPage> {
           SpotEntity spotEntity = _listSpotEntity[i];
           _addMarker(i + 1, spotEntity);
         }
-        /*_mapBloc.notifyMarkerAdded();*/
-        //setState to update marker
-        setState(() {});
+        _mapBloc.notifyMarkerAdded();
 //        _isMoveToCurrentGps = false;
       }
     } else {
@@ -316,19 +318,14 @@ class MapPageState extends BaseState<MapPage> {
       appBar: appbar,
       body: Stack(
         children: <Widget>[
-          /*PropertyChangeConsumer<MapBloc>(
-            properties: [
-//              MapProperties.locationFound,
-//              MapProperties.markerAdded
-              MapProperties.markerTapped
-            ],
+          PropertyChangeConsumer<MapBloc>(
+            properties: [MapProperties.markerTapped, MapProperties.markerAdded],
             builder: (context, bloc, property) {
               Fimber.d('MapView display googlemap @property=$property');
 
               return _buildGoogleMap();
             },
-          ),*/
-          _buildGoogleMap(),
+          ),
           PropertyChangeConsumer<MapBloc>(
             properties: [
               MapProperties.markerTapped,
