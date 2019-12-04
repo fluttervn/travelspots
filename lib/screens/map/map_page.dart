@@ -11,6 +11,7 @@ import 'package:travelspots/common/base_state.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 import 'package:travelspots/screens/map/main_bloc.dart';
 import 'package:travelspots/screens/map/map_bloc.dart';
+import 'package:travelspots/screens/map/spot_detail_page.dart';
 import 'package:travelspots/utils/app_utils.dart';
 
 /// A class displays map UI
@@ -252,10 +253,8 @@ class MapPageState extends BaseState<MapPage> {
   Widget _buildBottomSheet() {
     return SlidingUpPanel(
       panel: Container(
-        child: Text(
-          '${_selectedSpotEntity.name} - ID ${_selectedSpotEntity.id}'
-          '\nUniqueKey: ${_selectedSpotEntity.uniqueKey}',
-          style: TextStyle(fontSize: 16),
+        child: SpotDetailPage(
+          spotDataModel: _selectedSpotEntity,
         ),
         padding: EdgeInsets.all(16),
       ),
