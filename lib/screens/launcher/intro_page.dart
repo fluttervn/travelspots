@@ -34,7 +34,7 @@ class IntroPage extends StatelessWidget {
             style: TextStyle(fontSize: 18),
           ),
           Text(
-            '- Get details info you specific location.',
+            '- Get details info of your specific location.',
             style: TextStyle(fontSize: 18),
           ),
           Text(
