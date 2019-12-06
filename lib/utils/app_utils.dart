@@ -106,9 +106,10 @@ class AppUtils {
   /// detailed map.
   static int convertMapZoomLevelToPopularity(double zoomLevel) {
 //    print('convertMapZoomLevelToPopularity: $zoomLevel => ');
-    if (zoomLevel == null) return 3;
-    if (zoomLevel <= 12) return 1;
-    if (zoomLevel <= 14) return 2;
-    return 3;
+    if (zoomLevel == null) return 4;
+    if (zoomLevel <= 9.5) return 1;
+    if (zoomLevel <= 11.5) return 2;
+    if (zoomLevel <= 13) return 3;
+    return 4;
   }
 }
