@@ -116,4 +116,9 @@ class SpotEntity {
       item.description,
     );
   }
+
+  @override
+  String toString() {
+    return 'SpotEntity{id: $id, name: $name, address: $address, province: $province, lat: $lat, long: $long}';
+  }
 }
