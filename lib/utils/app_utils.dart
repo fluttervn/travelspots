@@ -97,4 +97,18 @@ class AppUtils {
     Fimber.d('after map: $newUrl');
     return newUrl;
   }
+
+  /// Convert the zoom level of MapView into the popularity of POI.
+  ///
+  /// - Zoom Level of map: from 0 to 23. 0 is largest map. 23 is most detailed.
+  /// https://stackoverflow.com/a/32407072/190309
+  /// - Popularity: 1 is for largest map, 2 for medium, and 3 for the most
+  /// detailed map.
+  static int convertMapZoomLevelToPopularity(double zoomLevel) {
+//    print('convertMapZoomLevelToPopularity: $zoomLevel => ');
+    if (zoomLevel == null) return 3;
+    if (zoomLevel <= 12) return 1;
+    if (zoomLevel <= 14) return 2;
+    return 3;
+  }
 }
