@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `locationLink` TEXT, `website` TEXT, `imageLink` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `locationLink` TEXT, `website` TEXT, `imageLink` TEXT, `description` TEXT, `wikiLink` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -113,7 +113,8 @@ class _$SpotDao extends SpotDao {
                   'locationLink': item.locationLink,
                   'website': item.website,
                   'imageLink': item.imageLink,
-                  'description': item.description
+                  'description': item.description,
+                  'wikiLink': item.wikiLink
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -136,7 +137,8 @@ class _$SpotDao extends SpotDao {
       row['locationLink'] as String,
       row['website'] as String,
       row['imageLink'] as String,
-      row['description'] as String);
+      row['description'] as String,
+      row['wikiLink'] as String);
 
   final InsertionAdapter<SpotEntity> _spotEntityInsertionAdapter;
 
