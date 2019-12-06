@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/base_state.dart';
-import 'package:travelspots/screens/map/map_home_page.dart';
+import 'package:travelspots/screens/map/map_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 import 'intro_page.dart';
@@ -23,6 +23,15 @@ class LauncherPageState extends BaseState<LauncherPage> {
     _launcherBloc.startCheckForUpdateWhenLaunchApp();
   }
 
+  _openMapPage() async {
+    print('Launcher: open MapPage');
+    Navigation.openScreen(
+      context: context,
+      page: MapPage(),
+      replaceScreen: true,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,11 +41,7 @@ class LauncherPageState extends BaseState<LauncherPage> {
     _launcherBloc.nextActionController.stream.listen((launcherStepProps) {
       print('LauncherPage: has new launcherStepProps=$launcherStepProps');
       if (launcherStepProps == LauncherStepProps.home) {
-        Navigation.openScreen(
-          context: context,
-          page: MapHomePage(),
-          replaceScreen: true,
-        );
+        _openMapPage();
       }
     });
   }
