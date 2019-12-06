@@ -33,9 +33,10 @@ class GetGSheetTask implements Task<Future<List<SpotEntity>>> {
 
     try {
       List<SpotEntity> _result = await remoteProvider.getSpotsFromGSheet(
-          spreadSheetId: spreadSheetId,
-          workSheetId: workSheetId,
-          provinceName: provinceName);
+        spreadSheetId: spreadSheetId,
+        workSheetId: workSheetId,
+        provinceName: provinceName,
+      );
       Fimber.e('GetGSheetTask DONE result = ', ex: _result);
       completer.complete(_result);
     } on Exception catch (e) {
