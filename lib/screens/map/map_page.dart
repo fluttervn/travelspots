@@ -43,6 +43,8 @@ class MapPageState extends BaseState<MapPage> {
   int _startTime;
   int _endTime;
   double _appbarHeight;
+  PanelController _panelController;
+  bool _isPanelOpened = false;
 
   Completer<GoogleMapController> _controller = Completer();
   static final double defaultZoomLevel = 16;
@@ -58,6 +60,7 @@ class MapPageState extends BaseState<MapPage> {
     super.initState();
     _mapBloc = providerOfBloc();
     _mainBloc = providerOfBloc();
+    _panelController = PanelController();
     _startTime = DateTime.now().millisecond;
     Fimber.d('MapView initState with @startTime=$_startTime');
     initPlatformState();
@@ -249,16 +252,36 @@ class MapPageState extends BaseState<MapPage> {
     super.dispose();
   }
 
+  void _onPanelDoubleTap() {
+    /* if (!_isPanelOpened)
+      _panelController.open();
+    else
+      _panelController.close();*/
+  }
+
   ///Build bottom sheet
   Widget _buildBottomSheet() {
-    return SlidingUpPanel(
-      panel: Container(
-        child: SpotDetailPage(
-          spotDataModel: _selectedSpotEntity,
+    return InkWell(
+      child: SlidingUpPanel(
+        panel: Container(
+          child: SpotDetailPage(
+            spotDataModel: _selectedSpotEntity,
+          ),
+          padding: EdgeInsets.all(16),
         ),
-        padding: EdgeInsets.all(16),
+        minHeight: 200,
+        maxHeight: MediaQuery.of(context).size.height - _appbarHeight,
+        controller: _panelController,
+        onPanelOpened: () {
+          _isPanelOpened = true;
+        },
+        onPanelClosed: () {
+          _isPanelOpened = false;
+        },
       ),
-      maxHeight: MediaQuery.of(context).size.height - _appbarHeight,
+      onDoubleTap: () {
+        _onPanelDoubleTap();
+      },
     );
   }
 
