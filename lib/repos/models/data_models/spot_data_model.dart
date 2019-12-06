@@ -44,6 +44,9 @@ class SpotDataModel {
   /// Image link
   String imageLink;
 
+  /// Wiki link
+  String wikiLink;
+
   SpotDataModel({
     this.id,
     this.uniqueKey,
@@ -59,6 +62,7 @@ class SpotDataModel {
     this.description,
     this.website,
     this.imageLink,
+    this.wikiLink,
   });
 
   /// Constructor RelicData Model
@@ -122,6 +126,7 @@ class SpotDataModel {
     var description = itemJson['gsx\u0024description']['\u0024t'];
     var website = itemJson['gsx\u0024website']['\u0024t'];
     var imageLink = itemJson['gsx\u0024imagelink']['\u0024t'];
+    var wikiLink = itemJson['gsx\wikilink']['\u0024t'];
     print('id is: $id');
     print('name is: $name');
     print('popularity is: $popularity');
@@ -135,6 +140,7 @@ class SpotDataModel {
     print('website is: $website');
     print('imageLink is: $imageLink');
     print('uniqueKey is: $uniqueKey');
+    print('wikiLink is: $wikiLink');
 
     return SpotDataModel(
       id: id,
@@ -150,6 +156,7 @@ class SpotDataModel {
       description: description,
       website: website,
       imageLink: imageLink,
+      wikiLink: wikiLink,
     );
   }
 }

@@ -19,6 +19,7 @@ class SpotEntity {
   final String website;
   final String imageLink;
   final String description;
+  final String wikiLink;
 
   /// Create new SpotEntity.
   ///
@@ -38,6 +39,7 @@ class SpotEntity {
     this.website,
     this.imageLink,
     this.description,
+    this.wikiLink,
   );
 
   // for importing data
@@ -67,6 +69,7 @@ class SpotEntity {
     var description = getOfKey('description');
     var website = getOfKey('website');
     var imageLink = getOfKey('imagelink');
+    var wikiLink = getOfKey('wikilink');
     /*print('id is: $id');
     print('name is: $name');
     print('popularity is: $popularity');
@@ -95,6 +98,7 @@ class SpotEntity {
       website,
       imageLink,
       description,
+      wikiLink,
     );
   }
 
@@ -114,6 +118,7 @@ class SpotEntity {
       item.website,
       item.imageLink,
       item.description,
+      item.wikiLink,
     );
   }
 }

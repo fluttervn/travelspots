@@ -43,6 +43,9 @@ class MapPageState extends BaseState<MapPage> {
   int _startTime;
   int _endTime;
   double _appbarHeight;
+  PanelController _panelController = PanelController();
+  final GlobalKey<SpotDetailPageState> _spotDetailKey =
+      GlobalKey<SpotDetailPageState>();
 
   Completer<GoogleMapController> _controller = Completer();
   static final double defaultZoomLevel = 16;
@@ -252,13 +255,33 @@ class MapPageState extends BaseState<MapPage> {
   ///Build bottom sheet
   Widget _buildBottomSheet() {
     return SlidingUpPanel(
-      panel: Container(
-        child: SpotDetailPage(
-          spotDataModel: _selectedSpotEntity,
+      controller: _panelController,
+      panel: InkWell(
+        child: Container(
+          child: SpotDetailPage(
+            key: _spotDetailKey,
+            spotDataModel: _selectedSpotEntity,
+          ),
+          padding: EdgeInsets.only(left: 8.0, right: 8.0),
         ),
-        padding: EdgeInsets.all(16),
+        onTap: () {
+          if (_panelController.isPanelClosed()) {
+            print('Open panel');
+            _panelController.open();
+            _spotDetailKey.currentState.onPanelOpened();
+          }
+        },
       ),
-      maxHeight: MediaQuery.of(context).size.height - _appbarHeight,
+      maxHeight: MediaQuery.of(context).size.height,
+      minHeight: 140,
+      onPanelOpened: () {
+        print('onPanelOpened');
+        _spotDetailKey.currentState.onPanelOpened();
+      },
+      onPanelClosed: () {
+        print('onPanelClosed');
+        _spotDetailKey.currentState.onPanelClosed();
+      },
     );
   }
 
