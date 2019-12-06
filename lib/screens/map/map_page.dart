@@ -45,16 +45,10 @@ class MapPageState extends BaseState<MapPage> {
   double _appbarHeight;
 
   Completer<GoogleMapController> _controller = Completer();
-  /*CameraPosition _initialCamera = CameraPosition(
-    target:
-        LatLng(10.762622, 106.660172), // Ho Chi Minh City(10.762622,106.660172)
-    zoom: 4,
-  );*/
-  static final double ZOOM = 16;
+  static final double defaultZoomLevel = 16;
   CameraPosition _initialCamera = CameraPosition(
-    target: LatLng(
-        10.7720894, 106.698282), // Ben Thanh Market(10.762622,106.660172)
-    zoom: ZOOM,
+    target: LatLng(10.7720894, 106.698282),
+    zoom: defaultZoomLevel,
   );
 
   CameraPosition _currentCameraPosition;
@@ -163,8 +157,9 @@ class MapPageState extends BaseState<MapPage> {
           Fimber.d(
               'MapView get location with @endTime=$_endTime and @totalTime=${_endTime - _startTime}');
           _currentCameraPosition = CameraPosition(
-              target: LatLng(location.latitude, location.longitude),
-              zoom: ZOOM);
+            target: LatLng(location.latitude, location.longitude),
+            zoom: defaultZoomLevel,
+          );
           _initialCamera = _currentCameraPosition;
           _mapBloc.notifyLocationFound();
           final GoogleMapController controller = await _controller.future;
@@ -212,6 +207,8 @@ class MapPageState extends BaseState<MapPage> {
 
   void _onGetNearbyPoi() async {
     if (!_isMarkerTapped) {
+      int popularity = AppUtils.convertMapZoomLevelToPopularity(
+          _currentCameraPosition?.zoom);
       Fimber.d('MapView: get nearby POI');
       final GoogleMapController controller = await _controller.future;
       LatLngBounds visibleRegion = await controller.getVisibleRegion();
@@ -224,6 +221,7 @@ class MapPageState extends BaseState<MapPage> {
         latEnd: newRegion[1],
         longStart: newRegion[2],
         longEnd: newRegion[3],
+        popularity: popularity,
       );
       if (_listSpotEntity != null && _listSpotEntity.length > 0) {
         for (var i = 0; i < _listSpotEntity.length; i++) {
@@ -283,8 +281,10 @@ class MapPageState extends BaseState<MapPage> {
         _onMapTap(latlng);
       },
       onCameraIdle: () {
-        Fimber.d('init: MapView: onCameraIdle');
         _onGetNearbyPoi();
+      },
+      onCameraMove: (CameraPosition position) {
+        _currentCameraPosition = position;
       },
       markers: Set<Marker>.of(_markers.values),
     );

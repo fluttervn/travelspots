@@ -82,6 +82,7 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
     @required double latEnd,
     @required double longStart,
     @required double longEnd,
+    @required int popularity,
   }) async {
     List<SpotEntity> items = await spotDao.findSpotsInRegion(
       latStart,
