@@ -186,7 +186,7 @@ class _$SpotDao extends SpotDao {
   Future<List<SpotEntity>> findSpotsInRegionByName(double latStart,
       double latEnd, double longStart, double longEnd, String keyword) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND name LIKE N? COLLATE Vietnamese_CI_AI',
+        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND name LIKE ? COLLATE Vietnamese_CI_AI',
         arguments: <dynamic>[latStart, latEnd, longStart, longEnd, keyword],
         mapper: _spotEntityMapper);
   }
