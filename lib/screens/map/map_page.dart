@@ -225,6 +225,7 @@ class MapPageState extends BaseState<MapPage> {
         popularity: popularity,
       );
       if (_listSpotEntity != null && _listSpotEntity.length > 0) {
+        _markers.clear();
         for (var i = 0; i < _listSpotEntity.length; i++) {
           SpotEntity spotEntity = _listSpotEntity[i];
           _addMarker(i + 1, spotEntity);
