@@ -17,10 +17,21 @@ abstract class SpotDao {
   @Query('SELECT * FROM SpotEntity WHERE id = :id')
   Future<SpotEntity> findSpotById(int id);
 
+  @Query('SELECT name FROM SpotEntity WHERE popularity = :popularity')
+  Future<List<SpotEntity>> findSpotByPopularity(int popularity);
+
+  @Query('SELECT name FROM SpotEntity WHERE popularity NOT IN (1,2,3)')
+  Future<List<SpotEntity>> findSpotByNoPopularity();
+
   @Query('SELECT * FROM SpotEntity WHERE lat > :latStart AND lat < :latEnd '
-      'AND long > :longStart AND long < :longEnd')
+      'AND long > :longStart AND long < :longEnd AND popularity <= :popularityLessThanOrEqual')
   Future<List<SpotEntity>> findSpotsInRegion(
-      double latStart, double latEnd, double longStart, double longEnd);
+    double latStart,
+    double latEnd,
+    double longStart,
+    double longEnd,
+    int popularityLessThanOrEqual,
+  );
 
   @Insert(onConflict: OnConflictStrategy.REPLACE)
   Future<void> insertSpot(SpotEntity item);
@@ -55,7 +66,7 @@ abstract class SpotDao {
   }
 }
 
-@Database(version: 1, entities: [SpotEntity])
+@Database(version: 2, entities: [SpotEntity])
 abstract class AppDatabase extends FloorDatabase {
   SpotDao get spotDao;
 }

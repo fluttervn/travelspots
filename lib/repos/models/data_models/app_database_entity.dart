@@ -84,7 +84,7 @@ class SpotEntity {
       AppUtils.parseIntOrException(id),
       uniqueKey,
       name,
-      AppUtils.parseInt(popularity, 4),
+      AppUtils.parseInt(popularity, 3),
       address,
       province,
       district,

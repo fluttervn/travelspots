@@ -65,7 +65,7 @@ class _$AppDatabase extends AppDatabase {
 
     return sqflite.openDatabase(
       path,
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
       },
@@ -153,11 +153,32 @@ class _$SpotDao extends SpotDao {
   }
 
   @override
-  Future<List<SpotEntity>> findSpotsInRegion(
-      double latStart, double latEnd, double longStart, double longEnd) async {
+  Future<List<SpotEntity>> findSpotByPopularity(int popularity) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ?',
-        arguments: <dynamic>[latStart, latEnd, longStart, longEnd],
+        'SELECT name FROM SpotEntity WHERE popularity = ?',
+        arguments: <dynamic>[popularity],
+        mapper: _spotEntityMapper);
+  }
+
+  @override
+  Future<List<SpotEntity>> findSpotByNoPopularity() async {
+    return _queryAdapter.queryList(
+        'SELECT name FROM SpotEntity WHERE popularity NOT IN (1,2,3)',
+        mapper: _spotEntityMapper);
+  }
+
+  @override
+  Future<List<SpotEntity>> findSpotsInRegion(double latStart, double latEnd,
+      double longStart, double longEnd, int popularityLessThanOrEqual) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND popularity <= ?',
+        arguments: <dynamic>[
+          latStart,
+          latEnd,
+          longStart,
+          longEnd,
+          popularityLessThanOrEqual
+        ],
         mapper: _spotEntityMapper);
   }
 
