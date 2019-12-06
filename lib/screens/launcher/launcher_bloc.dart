@@ -49,6 +49,17 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
   }
 
   startCheckForUpdateWhenLaunchApp() async {
+    /*List pop1 = await spotDao.findSpotByPopularity(1);
+    print('findSpotByPopularity(1) = ${pop1?.length} items');
+    List pop2 = await spotDao.findSpotByPopularity(2);
+    print('findSpotByPopularity(2) = ${pop2?.length} items');
+    List pop3 = await spotDao.findSpotByPopularity(3);
+    print('findSpotByPopularity(3) = ${pop3?.length} items');
+    List pop4 = await spotDao.findSpotByPopularity(4);
+    print('findSpotByPopularity(4) = ${pop4?.length} items');
+    List popNone = await spotDao.findSpotByNoPopularity();
+    print('findSpotByNoPopularity = ${popNone?.length} items');*/
+
     // Check whether is the first time?
     isFirstTimeLauncher = await localProvider.isFirstTimeLauncher();
 
