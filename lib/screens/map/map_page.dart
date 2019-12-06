@@ -61,6 +61,7 @@ class MapPageState extends BaseState<MapPage> {
     super.initState();
     _mapBloc = providerOfBloc();
     _mainBloc = providerOfBloc();
+    _panelController = PanelController();
     _startTime = DateTime.now().millisecond;
     Fimber.d('MapView initState with @startTime=$_startTime');
     initPlatformState();
@@ -250,6 +251,13 @@ class MapPageState extends BaseState<MapPage> {
       _locationSubscription.cancel();
     }
     super.dispose();
+  }
+
+  void _onPanelDoubleTap() {
+    /* if (!_isPanelOpened)
+      _panelController.open();
+    else
+      _panelController.close();*/
   }
 
   ///Build bottom sheet

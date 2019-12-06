@@ -183,6 +183,15 @@ class _$SpotDao extends SpotDao {
   }
 
   @override
+  Future<List<SpotEntity>> findSpotsInRegionByName(double latStart,
+      double latEnd, double longStart, double longEnd, String keyword) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND name LIKE ? COLLATE Vietnamese_CI_AI',
+        arguments: <dynamic>[latStart, latEnd, longStart, longEnd, keyword],
+        mapper: _spotEntityMapper);
+  }
+
+  @override
   Future<void> deleteAll() async {
     await _queryAdapter.queryNoReturn('DELETE FROM SpotEntity');
   }

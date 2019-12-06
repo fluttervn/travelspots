@@ -121,4 +121,9 @@ class SpotEntity {
       item.wikiLink,
     );
   }
+
+  @override
+  String toString() {
+    return 'SpotEntity{id: $id, name: $name, address: $address, province: $province, lat: $lat, long: $long}';
+  }
 }
