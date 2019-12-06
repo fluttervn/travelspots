@@ -56,6 +56,14 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
   }
 
   startCheckForUpdateWhenLaunchApp() async {
+    _print(String tag, List<SpotEntity> items) {
+      print('findSpotsInRegionByName = ${items.length} items');
+      if (items != null && items.length > 0) {
+        items.forEach((item) {
+          print('... $item');
+        });
+      }
+    }
     /*List pop1 = await spotDao.findSpotByPopularity(1);
     print('findSpotByPopularity(1) = ${pop1?.length} items');
     List pop2 = await spotDao.findSpotByPopularity(2);
@@ -66,6 +74,34 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
     print('findSpotByPopularity(4) = ${pop4?.length} items');
     List popNone = await spotDao.findSpotByNoPopularity();
     print('findSpotByNoPopularity = ${popNone?.length} items');*/
+
+    // Case 1:
+    // - Keyword is 'Quang' (non-VN char)
+    // - Query is 'AND name LIKE :keyword'
+    // - Result: 4 item -> Expect: 5
+    //
+    // Case 2:
+    // - Keyword is 'Quảng' (VN char)
+    // - Query is 'AND name LIKE :keyword'
+    // - Result: 1 item -> Expect: 5
+    //
+    // Case 2:
+    // - Keyword is 'Quảng' (VN char)
+    // - Query is 'AND name COLLATE Vietnamese_CI_AI LIKE :keyword COLLATE Vietnamese_CI_AI'
+    // - Result: 1 item -> Expect: 5
+    //
+    // Case 4:
+    // - Keyword is 'Quảng' (VN char)
+    // - Query is 'AND name LIKE :keyword COLLATE Vietnamese_CI_AI'
+    // - Result: 1 item -> Expect: 5
+    //
+//    String keyword = 'Quang'; // non-Vietnamese character
+    String keyword = 'Quảng'; // Vietnamese character
+    // keyword = convertUnicodeToAsciiText(keyword)';
+
+    List<SpotEntity> items = await spotDao.findSpotsInRegionByName(
+        -180, 180, -180, 180, '%$keyword%');
+    _print('findSpotsInRegionByName', items);
 
     // Check whether is the first time?
     isFirstTimeLauncher = await localProvider.isFirstTimeLauncher();

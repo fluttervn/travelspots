@@ -33,6 +33,17 @@ abstract class SpotDao {
     int popularityLessThanOrEqual,
   );
 
+  @Query('SELECT * FROM SpotEntity WHERE lat > :latStart AND lat < :latEnd '
+      'AND long > :longStart AND long < :longEnd '
+      'AND name LIKE N:keyword COLLATE Vietnamese_CI_AI')
+  Future<List<SpotEntity>> findSpotsInRegionByName(
+    double latStart,
+    double latEnd,
+    double longStart,
+    double longEnd,
+    String keyword,
+  );
+
   @Insert(onConflict: OnConflictStrategy.REPLACE)
   Future<void> insertSpot(SpotEntity item);
 
