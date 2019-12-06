@@ -5,9 +5,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailPage extends StatefulWidget {
   final SpotEntity spotDataModel;
+  final VoidCallback closePanel;
 
   SpotDetailPage({
     Key key,
+    this.closePanel,
     this.spotDataModel,
   }) : super(key: key);
 
@@ -70,6 +72,9 @@ class SpotDetailPageState extends State<SpotDetailPage> {
                         size: 32,
                         color: Colors.grey[400],
                       ),
+                      onPressed: () {
+                        widget.closePanel();
+                      },
                     )
                   : Container(
 //                      margin: EdgeInsets.all(12),

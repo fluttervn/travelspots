@@ -269,6 +269,9 @@ class MapPageState extends BaseState<MapPage> {
           child: SpotDetailPage(
             key: _spotDetailKey,
             spotDataModel: _selectedSpotEntity,
+            closePanel: () {
+              _panelController.close();
+            },
           ),
           padding: EdgeInsets.only(left: 8.0, right: 8.0),
         ),
