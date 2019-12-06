@@ -8,7 +8,14 @@ import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/local/local_provider.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
 
-enum LauncherStepProps { splash, intro, checkForUpdate, home }
+enum LauncherStepProps {
+  splash,
+  intro,
+  checkForUpdate,
+  checkForUpdate1stError,
+  checkForUpdate2ndError,
+  home
+}
 enum CheckForUpdateProps { inProgress, success, failed }
 
 /// Business Logic related to Login feature
@@ -104,8 +111,12 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
       notifyListeners(currentLauncherStep);*/
       nextActionController.sink.add(LauncherStepProps.home);
     } else if (checkForUpdateStatus == CheckForUpdateProps.failed) {
-      print('... Launcher: CFU failed: to LauncherStepProps.home');
-      currentLauncherStep = LauncherStepProps.home;
+      print(
+          '... Launcher: CFU failed: to LauncherStepProps.checkForUpdateError');
+      if (isFirstTimeLauncher)
+        currentLauncherStep = LauncherStepProps.checkForUpdate1stError;
+      else
+        currentLauncherStep = LauncherStepProps.checkForUpdate2ndError;
       notifyListeners(currentLauncherStep);
     } else if (checkForUpdateStatus == CheckForUpdateProps.inProgress) {
       print('... Launcher: CFU inProgr: to LauncherStepProps.checkForUpdate');

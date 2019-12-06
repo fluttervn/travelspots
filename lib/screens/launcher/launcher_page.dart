@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fimber/flutter_fimber.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:travelspots/common/base_state.dart';
+import 'package:travelspots/screens/launcher/update_error_page.dart';
+import 'package:travelspots/screens/launcher/update_page.dart';
 import 'package:travelspots/screens/map/map_page.dart';
 import 'package:travelspots/utils/navigation.dart';
 
 import 'intro_page.dart';
 import 'launcher_bloc.dart';
-import 'update_page.dart';
 
 /// A class displays UI for Launcher screen
 class LauncherPage extends StatefulWidget {
@@ -52,6 +54,16 @@ class LauncherPageState extends BaseState<LauncherPage> {
     super.dispose();
   }
 
+  void _onRetryClicked() {
+    Fimber.d('Launch:_onRetryClicked');
+    _launcherBloc.checkUpdateData();
+    _openMapPage();
+  }
+
+  void _onSkipClicked() {
+    Fimber.d('Launch:_onSkipClicked');
+  }
+
   @override
   Widget buildChild(BuildContext context) {
     return SafeArea(
@@ -60,6 +72,8 @@ class LauncherPageState extends BaseState<LauncherPage> {
           properties: [
             LauncherStepProps.intro,
             LauncherStepProps.checkForUpdate,
+            LauncherStepProps.checkForUpdate1stError,
+            LauncherStepProps.checkForUpdate2ndError,
 //            LauncherStepProps.home,
             LauncherStepProps.splash,
           ],
@@ -75,6 +89,15 @@ class LauncherPageState extends BaseState<LauncherPage> {
               );
             } else if (property == LauncherStepProps.checkForUpdate) {
               return CheckForUpdatePage();
+            } else if (property == LauncherStepProps.checkForUpdate1stError) {
+              return CheckForUpdateErrorPage(
+                onRetry: _onRetryClicked,
+              );
+            } else if (property == LauncherStepProps.checkForUpdate2ndError) {
+              return CheckForUpdateErrorPage(
+                onRetry: _onRetryClicked,
+                onSkip: _onSkipClicked,
+              );
             } else {
               return Container();
             }
