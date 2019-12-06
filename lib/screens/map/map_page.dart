@@ -264,35 +264,39 @@ class MapPageState extends BaseState<MapPage> {
   Widget _buildBottomSheet() {
     return SlidingUpPanel(
       controller: _panelController,
-      panel: InkWell(
-        child: Container(
-          child: SpotDetailPage(
-            key: _spotDetailKey,
-            spotDataModel: _selectedSpotEntity,
-            closePanel: () {
-              _panelController.close();
-            },
-          ),
-          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+      isDraggable: false,
+      panel: Container(
+        child: Column(
+          children: <Widget>[
+            SpotDetailPage(
+              key: _spotDetailKey,
+              spotDataModel: _selectedSpotEntity,
+              togglePanel: () {
+                if (_panelController.isPanelClosed()) {
+                  print('Open panel');
+                  _panelController.open();
+                  _spotDetailKey.currentState.onPanelOpened();
+                } else {
+                  print('Close panel');
+                  _panelController.close();
+                  _spotDetailKey.currentState.onPanelClosed();
+                }
+              },
+            ),
+          ],
         ),
-        onTap: () {
-          if (_panelController.isPanelClosed()) {
-            print('Open panel');
-            _panelController.open();
-            _spotDetailKey.currentState.onPanelOpened();
-          }
-        },
+        padding: EdgeInsets.only(left: 8.0, right: 8.0),
       ),
       maxHeight: MediaQuery.of(context).size.height,
       minHeight: 140,
-      onPanelOpened: () {
-        print('onPanelOpened');
-        _spotDetailKey.currentState.onPanelOpened();
-      },
-      onPanelClosed: () {
-        print('onPanelClosed');
-        _spotDetailKey.currentState.onPanelClosed();
-      },
+//      onPanelOpened: () {
+//        print('onPanelOpened');
+//        _spotDetailKey.currentState.onPanelOpened();
+//      },
+//      onPanelClosed: () {
+//        print('onPanelClosed');
+//        _spotDetailKey.currentState.onPanelClosed();
+//      },
     );
   }
 
