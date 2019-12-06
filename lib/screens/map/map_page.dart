@@ -207,9 +207,10 @@ class MapPageState extends BaseState<MapPage> {
 
   void _onGetNearbyPoi() async {
     if (!_isMarkerTapped) {
-      int popularity = AppUtils.convertMapZoomLevelToPopularity(
-          _currentCameraPosition?.zoom);
-      Fimber.d('MapView: get nearby POI');
+      var zoomLevel = _currentCameraPosition?.zoom;
+      int popularity = AppUtils.convertMapZoomLevelToPopularity(zoomLevel);
+      Fimber.d('MapView: get nearby POI: zoomLevel=$zoomLevel '
+          '=> popularity: $popularity');
       final GoogleMapController controller = await _controller.future;
       LatLngBounds visibleRegion = await controller.getVisibleRegion();
       Fimber.d('new regionBound=$visibleRegion');

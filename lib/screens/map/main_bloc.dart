@@ -89,8 +89,10 @@ class MainBloc extends BaseBloc<BaseBlocProperties> {
       latEnd,
       longStart,
       longEnd,
+      popularity,
     );
-    Fimber.d('There are ${items?.length} item whenfindSpotsInRegion');
+    Fimber.d('There are ${items?.length} item whenfindSpotsInRegion with '
+        'popularity=$popularity');
     return items;
   }
 
