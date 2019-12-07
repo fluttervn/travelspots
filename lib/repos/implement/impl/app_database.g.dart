@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `locationLink` TEXT, `website` TEXT, `imageLink` TEXT, `description` TEXT, `wikiLink` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SpotEntity` (`id` INTEGER, `uniqueKey` TEXT, `searchText` TEXT, `name` TEXT, `popularity` INTEGER, `address` TEXT, `province` TEXT, `district` TEXT, `districtKey` TEXT, `lat` REAL, `long` REAL, `locationLink` TEXT, `website` TEXT, `imageLink` TEXT, `description` TEXT, `wikiLink` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -102,6 +102,7 @@ class _$SpotDao extends SpotDao {
             (SpotEntity item) => <String, dynamic>{
                   'id': item.id,
                   'uniqueKey': item.uniqueKey,
+                  'searchText': item.searchText,
                   'name': item.name,
                   'popularity': item.popularity,
                   'address': item.address,
@@ -126,6 +127,7 @@ class _$SpotDao extends SpotDao {
   static final _spotEntityMapper = (Map<String, dynamic> row) => SpotEntity(
       row['id'] as int,
       row['uniqueKey'] as String,
+      row['searchText'] as String,
       row['name'] as String,
       row['popularity'] as int,
       row['address'] as String,
@@ -188,7 +190,7 @@ class _$SpotDao extends SpotDao {
   Future<List<SpotEntity>> findSpotsInRegionByName(double latStart,
       double latEnd, double longStart, double longEnd, String keyword) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND name LIKE ? COLLATE Vietnamese_CI_AI',
+        'SELECT * FROM SpotEntity WHERE lat > ? AND lat < ? AND long > ? AND long < ? AND searchText LIKE ? COLLATE Vietnamese_CI_AI',
         arguments: <dynamic>[latStart, latEnd, longStart, longEnd, keyword],
         mapper: _spotEntityMapper);
   }

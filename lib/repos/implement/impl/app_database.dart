@@ -35,7 +35,7 @@ abstract class SpotDao {
 
   @Query('SELECT * FROM SpotEntity WHERE lat > :latStart AND lat < :latEnd '
       'AND long > :longStart AND long < :longEnd '
-      'AND name LIKE :keyword COLLATE Vietnamese_CI_AI')
+      'AND searchText LIKE :keyword COLLATE Vietnamese_CI_AI')
   Future<List<SpotEntity>> findSpotsInRegionByName(
     double latStart,
     double latEnd,

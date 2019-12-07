@@ -7,6 +7,7 @@ import 'package:travelspots/repos/app_repo.dart';
 import 'package:travelspots/repos/implement/impl/app_database.dart';
 import 'package:travelspots/repos/local/local_provider.dart';
 import 'package:travelspots/repos/models/data_models/app_database_entity.dart';
+import 'package:travelspots/utils/string_utils.dart';
 
 enum LauncherStepProps {
   splash,
@@ -60,7 +61,7 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
       print('findSpotsInRegionByName = ${items.length} items');
       if (items != null && items.length > 0) {
         items.forEach((item) {
-          print('... $item');
+          print('... ${item.searchText} $item');
         });
       }
     }
@@ -95,12 +96,12 @@ class LauncherBloc extends BaseBloc<LauncherStepProps> {
     // - Query is 'AND name LIKE :keyword COLLATE Vietnamese_CI_AI'
     // - Result: 1 item -> Expect: 5
     //
-//    String keyword = 'Quang'; // non-Vietnamese character
-    String keyword = 'Quảng'; // Vietnamese character
-    // keyword = convertUnicodeToAsciiText(keyword)';
+//    String keyword = 'quang'; // non-Vietnamese character, non case sensitive
+    String keyword = 'hoi quan 12'; // Vietnamese character
+    String asciiKeyword = convertUnicodeToAsciiText(keyword);
 
     List<SpotEntity> items = await spotDao.findSpotsInRegionByName(
-        -180, 180, -180, 180, '%$keyword%');
+        -180, 180, -180, 180, '%$asciiKeyword%');
     _print('findSpotsInRegionByName', items);
 
     // Check whether is the first time?

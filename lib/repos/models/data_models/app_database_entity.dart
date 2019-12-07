@@ -1,12 +1,14 @@
 import 'package:floor/floor.dart';
 import 'package:travelspots/repos/models/data_models/spot_data_model.dart';
 import 'package:travelspots/utils/app_utils.dart';
+import 'package:travelspots/utils/string_utils.dart';
 
 @entity
 class SpotEntity {
   @primaryKey
   final int id;
   final String uniqueKey;
+  final String searchText;
   final String name;
   final int popularity;
   final String address;
@@ -27,6 +29,7 @@ class SpotEntity {
   SpotEntity(
     this.id,
     this.uniqueKey,
+    this.searchText,
     this.name,
     this.popularity,
     this.address,
@@ -83,9 +86,14 @@ class SpotEntity {
     print('imageLink is: $imageLink');
     print('uniqueKey is: uniqueKey');*/
 
+    final searchText = '${convertUnicodeToAsciiText(name)} '
+        '${convertUnicodeToAsciiText(address)} '
+        '${convertUnicodeToAsciiText(district)} '
+        '${convertUnicodeToAsciiText(province)} ';
     return SpotEntity(
       AppUtils.parseIntOrException(id),
       uniqueKey,
+      searchText,
       name,
       AppUtils.parseInt(popularity, 4),
       address,
@@ -103,9 +111,15 @@ class SpotEntity {
   }
 
   factory SpotEntity.fromDatModel(SpotDataModel item) {
+    final searchText = '${convertUnicodeToAsciiText(item.name)} '
+        '${convertUnicodeToAsciiText(item.address)} '
+        '${convertUnicodeToAsciiText(item.district)} '
+        '${convertUnicodeToAsciiText(item.province)} ';
+
     return SpotEntity(
       item.id,
       item.uniqueKey,
+      searchText,
       item.name,
       item.popularity,
       item.address,
