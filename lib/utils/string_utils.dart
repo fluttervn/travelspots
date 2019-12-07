@@ -61,6 +61,10 @@ final Map<String, String> asciiMap = {
   'ử': 'u',
   'ữ': 'u',
   'ự': 'u',
+  'ỹ': 'y',
+  'ỳ': 'y',
+  'ý': 'y',
+  'ỷ': 'y',
 };
 
 String convertUnicodeToAsciiText(String text) {
